@@ -1,0 +1,22 @@
+== Resources / Links
+=== Details about Lightweight Third Party Authentication (LTPA) 
+- https://stackoverflow.com/questions/18428016/how-to-decrypt-ltpa-token-version-2
+- https://www.ibm.com/support/knowledgecenter/en/SSAW57_8.5.5/com.ibm.websphere.nd.doc/ae/cwbs_ltpatokens.html
+- https://www.ibm.com/support/knowledgecenter/en/SSEQTP_8.5.5/com.ibm.websphere.wlp.doc/ae/rwlp_config_ltpa.html
+- https://www.ibm.com/support/knowledgecenter/en/SSCGGQ_1.2.0/com.ibm.ism.doc/Security/se00013_.html
+- https://www.ibm.com/support/knowledgecenter/en/SSPREK_6.1.0/com.ibm.itame.doc_6.1/am61_webservers_admin136.htm
+- https://www.ibm.com/support/knowledgecenter/SS9H2Y_7.0.0/com.ibm.dp.xi.doc/ltpa_generatingltpatokens.html#ltpa_generatingltpatokens
+- http://www-12.lotus.com/ldd/doc/tools/c/7.0/api70ug.nsf/85255d56004d2bfd85255b1800631684/ceda2cb8df47607f85256c3d005f816d
+- http://offbytwo.com/2007/08/21/working-with-ltpa.html
+- https://www.cnblogs.com/hannover/archive/2011/05/29/2061798.html
+- https://wrschneider.github.io/2011/10/22/quick-and-dirty-sso-with-ltpa.html
+
+=== Other Implemenations
+==== JavaScript
+- https://www.npmjs.com/package/oniyi-ltpa
+- https://www.npmjs.com/package/ltpa
+
+==== Java
+- https://sites.google.com/site/samiraraujo/projects/ltpa-token-factory
+- https://www.openntf.org/main.nsf/project.xsp?r=project/DominoTomcatSSO/summary
+- https://github.com/jmurciego/TomcatLTPAValve

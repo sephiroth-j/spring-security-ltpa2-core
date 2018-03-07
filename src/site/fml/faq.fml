@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faqs xmlns="http://maven.apache.org/FML/1.0.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/FML/1.0.1 http://maven.apache.org/xsd/fml-1.0.1.xsd"
+  title="Frequently Asked Questions"
+  toplink="false">
+	<part id="keys">
+		<title>Keys</title>
+		<faq id="where-to-find">
+			<question>Where do I find the keys (public, shared and private) in my WebSphere or Liberty Profile?</question>
+			<answer>
+				<p>The default path is <code>${server.output.dir}/resources/security/ltpa.keys</code>. The path can be specified using <code>keysFileName</code>. The file will look like this:</p>
+				<pre>
+#Fri Mar 24 17:00:11 CET 2017
+com.ibm.websphere.CreationDate=Fri Mar 24 17\:00\:11 CET 2017
+com.ibm.websphere.ltpa.version=1.0
+com.ibm.websphere.ltpa.3DESKey=JvywHhxC+EhtUdeusbo31E5IUOEPmbMxMnKTTOB39fo\=
+com.ibm.websphere.CreationHost=localhost
+com.ibm.websphere.ltpa.PrivateKey=dP4F2H1MSphvjXHFnLqc1sUYiM83Mkg5MzCQWbxya0xMLPl6lwSbC9+SuCpbHTb9Qdl1w3d5bcDf400tBnfStdtkRYSOeo9oEbXOG4RqIV0x3WZx7AyJ5D8wVIfzOjgvfdQXqNkoiatyMwptvCytyEVbWH2kj3j0gB8O2/miPsbnZqNdIRDAt4TE2YjhVagC/ZP2xxxwncLDexF8Bme7NaMtJUlGMe8Nhkb61Z52PU2FHJAF6zPaTwj+JcZ/tg63lr5wRI9hGFOb7MhBrhgm9YiBqPOT30Crl28FHtTP9pnrqiC45QxU3aXVsYFh0hXptkkK9HeTk/YWFjDPVlfg9azrgGq64wHHg3cSjV21GAE\=
+com.ibm.websphere.ltpa.Realm=defaultRealm
+com.ibm.websphere.ltpa.PublicKey=AOECPMDAs0o7MzQIgxZhAXJZ2BaDE3mqRZAbkbQO38CgUIgeAPEA3iWIYp+p/Ai0J4//UOml20an+AuCnDGzcFCaf3S3EAiR4cK59vl/u8TIswPIg2akh4J7qL3E/qRxN9WD945tS3h0YhJZSq7rC22wytLsxbFuKpEuYfm1i5spAQAB
+				</pre>
+				<p>You will need <code>com.ibm.websphere.ltpa.3DESKey</code>, <code>com.ibm.websphere.ltpa.PrivateKey</code> and <code>com.ibm.websphere.ltpa.PublicKey</code>. All of them are encoded while some of them are encrypted prior.</p>
+				<p><code>com.ibm.websphere.ltpa.3DESKey</code> is the encrypted shared key that is used to enctrypt the LTPA2-Token.</p>
+				<p><code>com.ibm.websphere.ltpa.PrivateKey</code> is your encrypted private key that you will need if want to send an LTPA2-Token.</p>
+				<p><code>com.ibm.websphere.ltpa.PublicKey</code> is the corresponding public key that the receiver of the token you created needs to verify the token signature. That's not what you need, unless you want send tokens to yourself. You need the public key from the service that sends you LTPA2-tokens. Speek with the administrator of that service, he can give it to you.</p>
+				<p><small><a href="https://www.ibm.com/support/knowledgecenter/en/SSEQTP_8.5.5/com.ibm.websphere.wlp.doc/ae/rwlp_config_ltpa.html">Source</a></small></p>
+			</answer>
+		</faq>
+		<faq id="password">
+			<question>And where do I find the password for the shared key?</question>
+			<answer>
+				<p>In the attribute <code>keysPassword</code> in your server configuration. If it is xor encoded (which it probably is), you can decode it. There is <a href="http://www.devops-insight.com/2014/08/how-to-decode-websphere-passwords.html">this litte tutorial</a> that will help you to do so.</p>
+			</answer>
+		</faq>
+	</part>
+</faqs>

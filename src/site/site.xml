@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.8.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 http://maven.apache.org/xsd/decoration-1.8.0.xsd">
+	<skin>
+		<groupId>org.apache.maven.skins</groupId>
+		<artifactId>maven-fluido-skin</artifactId>
+		<version>1.7</version>
+	</skin>
+	<body>
+		<menu name="Overview">
+			<item name="Introduction" href="index.html" />
+			<item name="Usage" href="usage.html" />
+			<item name="FAQ" href="FAQ.html" />
+			<item name="Links" href="links.html" />
+		</menu>
+		<menu name="Examples">
+			<item name="Sample Project" href="https://github.com/sephiroth-j/spring-security-ltpa2-sample" />
+		</menu>
+		<menu ref="reports" />
+	</body>
+</project>
