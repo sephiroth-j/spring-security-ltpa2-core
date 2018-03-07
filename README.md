@@ -1,10 +1,10 @@
 # Spring Security LTPA2
 Add Spring Security support for user pre-authentication using IBM Lightweight Third Party Authentication (LTPA) v2. LTPA2 tokens can be created as well.
 
-# Usage
+## Usage
 Checkout my [sample project](https://github.com/sephiroth-j/spring-security-ltpa2-sample) for a complete example.
 
-## pom.xml
+### pom.xml
 Add it as an dependency together with you Spring Security dependencies.
 
 	<dependencies>
@@ -30,7 +30,7 @@ Add it as an dependency together with you Spring Security dependencies.
 		</repository>
 	</repositories>
 	
-## Web Security Configuration
+### Web Security Configuration
 Add the `Ltpa2Filter` using `Ltpa2Configurer`. It needs a `SecretKey` instance of the shared key that is used for the symmetric encryption of the LTPA2 token. In order to verify the provided token, it also needs the `PublicKey` from the identity provider (for example IBM Secure Gateway / DataPower) that sends the LTPA2 token.
 
 As the user is pre-authenticated, **an instance of `UserDetailsService` is required** to setup the security context and populate it with the granted roles for the authenticated user. In this example we will simply use `InMemoryAuthentication` with a hard-coded list of users and their roles.
@@ -62,3 +62,7 @@ As the user is pre-authenticated, **an instance of `UserDetailsService` is requi
 				.withUser("user").password("password").roles("USER");
 		}
 	}
+## Project info and Javadoc
+[Maven Site](http://www.sephiroth-j.de/java/spring-security-ltpa2/)
+
+[Javadoc](http://www.sephiroth-j.de/java/spring-security-ltpa2/apidocs/)
