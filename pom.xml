@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.sephiroth-j</groupId>
@@ -8,7 +7,7 @@
 	<name>Spring Security LTPA2</name>
 	<description>Support user pre-authentication using IBM Lightweight Third Party Authentication (LTPA) v2. LTPA2 tokens can be created as well.</description>
 	<url>http://www.sephiroth-j.de/java/spring-security-ltpa2/</url>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.1.0</version>
 	<inceptionYear>2018</inceptionYear>
 	<issueManagement>
 		<system>GitHub Issues</system>
@@ -280,7 +279,8 @@
 		<url>https://github.com/sephiroth-j/spring-security-ltpa2-core</url>
 		<connection>scm:git:git://github.com:sephiroth-j/spring-security-ltpa2-core.git</connection>
 		<developerConnection>scm:git:git@github.com:sephiroth-j/spring-security-ltpa2-core.git</developerConnection>
-	</scm>
+	  <tag>0.1.0</tag>
+  </scm>
 	
 	<distributionManagement>
 		<repository>
