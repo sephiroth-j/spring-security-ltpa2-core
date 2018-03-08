@@ -37,7 +37,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
- * The pre-authentication filter for LTPAv2-Tokens.
+ * The pre-authentication filter for LTPA2 tokens. The token is expected to be given in the header {@link #headerName} with an {@link #headerValueIdentifier optional prefix}. If the header is empty or not found the token will be searched in the cookie named {@link #cookieName}.
  *
  * @author Sephiroth
  */
@@ -49,7 +49,7 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 
 	/**
 	 * <p>
-	 * the name of the cookie containing the LTPA2-Token</p>
+	 * the name of the cookie expected to contain the LTPA2 token</p>
 	 * <p>
 	 * default: {@code "LtpaToken2"}</p>
 	 */
@@ -58,7 +58,16 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 
 	/**
 	 * <p>
-	 * the prefix in the Authorization header preceding the LTPA2-Token</p>
+	 * the name of header expected to contain the LTPA2 token</p>
+	 * <p>
+	 * default: {@code "Authorization"}</p>
+	 */
+	@Setter
+	private String headerName = "Authorization";
+
+	/**
+	 * <p>
+	 * the prefix in {@link #headername the header} preceding the LTPA2 token</p>
 	 * <p>
 	 * default: {@code cookieName + " "}</p>
 	 *
@@ -74,7 +83,7 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	private PublicKey signerKey;
 
 	/**
-	 * the shared secret key that is used to encrypt LTPA2-Tokens
+	 * the shared secret key that is used to encrypt LTPA2 tokens
 	 */
 	@Setter
 	private SecretKey sharedKey;
@@ -92,13 +101,15 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	{
 		Assert.notNull(this.userDetailsService, "A UserDetailsService is required");
 		Assert.hasText(this.cookieName, "A cookieName is required");
+		Assert.hasText(this.headerName, "A headerName is required");
 		Assert.hasText(this.headerValueIdentifier, "A headerValueIdentifier is required");
 		Assert.notNull(this.signerKey, "A signerKey is required");
 		Assert.notNull(this.sharedKey, "A sharedKey is required");
 	}
 
-	private String getTokenFromAuthHeader(final String header)
+	private String getTokenFromHeader(final String header)
 	{
+		log.debug("header-value='{}', prefix='{}'", header, headerValueIdentifier);
 		return header != null && header.startsWith(headerValueIdentifier) ? header.substring(header.indexOf(headerValueIdentifier) + headerValueIdentifier.length()) : "";
 	}
 
@@ -108,16 +119,16 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	}
 
 	/**
-	 * Get the LTPA2-Token from the request. Either from the "Authorization" header or the Cookies.
+	 * Get the LTPA2 token from the request. Either from the "Authorization" header or the Cookies.
 	 *
 	 * @param request
-	 * @return the value of the LTPA2-Token or empty string if none was found but never {@code null}
+	 * @return the value of the LTPA2 token or empty string if none was found but never {@code null}
 	 * @see #headerValueIdentifier
 	 * @see #cookieName
 	 */
 	private String getTokenFromRequest(final HttpServletRequest request)
 	{
-		String ltpaToken = getTokenFromAuthHeader(request.getHeader("Authorization"));
+		String ltpaToken = getTokenFromHeader(request.getHeader(headerName));
 		if (ltpaToken.isEmpty())
 		{
 			ltpaToken = getTokenFromCookies(request.getCookies());
@@ -135,7 +146,7 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException
 	{
 		String ltpaToken = getTokenFromRequest(request);
-		log.debug("raw LTPA2-Token: {}", ltpaToken);
+		log.debug("raw LTPA2 token: {}", ltpaToken);
 
 		try
 		{

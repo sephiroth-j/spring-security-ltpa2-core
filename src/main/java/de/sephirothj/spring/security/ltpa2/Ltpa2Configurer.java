@@ -28,7 +28,7 @@ import org.springframework.util.Assert;
 
 /**
  * <p>
- * A convenient way to configure pre-authentication using LTPA2-Tokens.</p>
+ * A convenient way to configure {@link Ltpa2Filter the pre-authentication filter}.</p>
  * <p>
  * How to use:</p>
  * <pre>
@@ -61,7 +61,7 @@ public class Ltpa2Configurer extends AbstractHttpConfigurer<Ltpa2Configurer, Htt
 {
 	/**
 	 * <p>
-	 * the name of the cookie containing the LTPA2-Token</p>
+	 * the name of the cookie expected to contain the LTPA2 token</p>
 	 * <p>
 	 * default: {@code "LtpaToken2"}</p>
 	 */
@@ -69,12 +69,22 @@ public class Ltpa2Configurer extends AbstractHttpConfigurer<Ltpa2Configurer, Htt
 
 	/**
 	 * <p>
-	 * the prefix in the Authorization header preceding the LTPA2-Token</p>
+	 * the name of header expected to contain the LTPA2 token</p>
+	 * <p>
+	 * default: {@code "Authorization"}</p>
+	 */
+	private String headerName = "Authorization";
+
+	/**
+	 * <p>
+	 * the prefix in {@link #headername the header} preceding the LTPA2 token (may be empty)</p>
 	 * <p>
 	 * default: {@code cookieName + " "}</p>
 	 *
 	 * @see #cookieName
 	 */
+	@Setter
+	@NonNull
 	private String headerValueIdentifier = cookieName + " ";
 
 	/**
@@ -85,7 +95,7 @@ public class Ltpa2Configurer extends AbstractHttpConfigurer<Ltpa2Configurer, Htt
 	private PublicKey signerKey;
 
 	/**
-	 * the shared secret key that is used to encrypt LTPA2-Tokens
+	 * the shared secret key that is used to encrypt LTPA2 tokens
 	 */
 	@Setter
 	@NonNull
@@ -107,6 +117,7 @@ public class Ltpa2Configurer extends AbstractHttpConfigurer<Ltpa2Configurer, Htt
 		Ltpa2Filter ltpaFilter = new Ltpa2Filter();
 		ltpaFilter.setUserDetailsService(userDetailsService);
 		ltpaFilter.setCookieName(cookieName);
+		ltpaFilter.setHeaderName(headerName);
 		ltpaFilter.setHeaderValueIdentifier(headerValueIdentifier);
 		ltpaFilter.setSharedKey(sharedKey);
 		ltpaFilter.setSignerKey(signerKey);
@@ -114,18 +125,31 @@ public class Ltpa2Configurer extends AbstractHttpConfigurer<Ltpa2Configurer, Htt
 		builder.addFilterAt(ltpaFilter, AbstractPreAuthenticatedProcessingFilter.class);
 	}
 
+	/**
+	 * configures the name of the cookie expected to contain the LTPA2 token
+	 *
+	 * @param cookieName the cookie name
+	 * @return this instance
+	 * @throws IllegalArgumentException if {@code cookieName} is empty
+	 */
 	public Ltpa2Configurer cookieName(@NonNull final String cookieName)
 	{
 		Assert.hasText(cookieName, "A cookieName is required");
 		this.cookieName = cookieName;
-		headerValueIdentifier = cookieName + " ";
 		return this;
 	}
 
-	public Ltpa2Configurer headerValueIdentifier(@NonNull final String headerValueIdentifier)
+	/**
+	 * configures the name of the header expected to contain the LTPA2 token
+	 *
+	 * @param headerName the name of the header
+	 * @return this instance
+	 * @throws IllegalArgumentException if {@code headerName} is empty
+	 */
+	public Ltpa2Configurer headerName(@NonNull final String headerName)
 	{
-		Assert.hasText(headerValueIdentifier, "A headerValueIdentifier is required");
-		this.headerValueIdentifier = headerValueIdentifier;
+		Assert.hasText(headerName, "A headerName is required");
+		this.headerName = headerName;
 		return this;
 	}
 }
