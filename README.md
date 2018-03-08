@@ -1,11 +1,26 @@
 # Spring Security LTPA2
 Add Spring Security support for user pre-authentication using IBM Lightweight Third Party Authentication (LTPA) v2. LTPA2 tokens can be created as well.
 
+Tokens are either taken from an HTTP header (default `Authorization` with prefix `LtpaToken2`) or a cookie (default `LtpaToken2`). Both names can be configured as needed, as well as the value prefix.
+
+**Examples**
+
+	# default header and value prefix
+	curl -i -H "Authorization: LtpaToken2 <token-value>" http://localhost:8080/hello
+	# custom header name without value prefix
+	curl -i -H "My-Auth-Header: <token-value>" http://localhost:8080/hello
+	# default cookie
+	curl -i -b "LtpaToken2=<token-value>" http://localhost:8080/hello
+	# custom cookie name
+	curl -i -b "My-Auth-Cookie=<token-value>" http://localhost:8080/hello
+
+An absolute minimum requirement for configuration are the shared secret key needed for decrypting the token and, in order to verify its signature, the public key from the identity provider that created the token.
+
 ## Usage
 Checkout my [sample project](https://github.com/sephiroth-j/spring-security-ltpa2-sample) for a complete example.
 
 ### pom.xml
-Add it as an dependency together with you Spring Security dependencies.
+Add the library as an dependency together with your Spring Security dependencies.
 
 	<dependencies>
 		<dependency>
