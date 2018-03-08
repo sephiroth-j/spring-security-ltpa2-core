@@ -30,7 +30,7 @@ public class Constants
 	public final String ENCRYPTED_PRIVATE_KEY = "dP4F2H1MSphvjXHFnLqc1sUYiM83Mkg5MzCQWbxya0xMLPl6lwSbC9+SuCpbHTb9Qdl1w3d5bcDf400tBnfStdtkRYSOeo9oEbXOG4RqIV0x3WZx7AyJ5D8wVIfzOjgvfdQXqNkoiatyMwptvCytyEVbWH2kj3j0gB8O2/miPsbnZqNdIRDAt4TE2YjhVagC/ZP2xxxwncLDexF8Bme7NaMtJUlGMe8Nhkb61Z52PU2FHJAF6zPaTwj+JcZ/tg63lr5wRI9hGFOb7MhBrhgm9YiBqPOT30Crl28FHtTP9pnrqiC45QxU3aXVsYFh0hXptkkK9HeTk/YWFjDPVlfg9azrgGq64wHHg3cSjV21GAE=";
 
 	/**
-	 *base64-encoded public key which corresponds to {@link #ENCRYPTED_PRIVATE_KEY}
+	 * base64-encoded public key which corresponds to {@link #ENCRYPTED_PRIVATE_KEY}
 	 */
 	public final String ENCODED_PUBLIC_KEY = "AOECPMDAs0o7MzQIgxZhAXJZ2BaDE3mqRZAbkbQO38CgUIgeAPEA3iWIYp+p/Ai0J4//UOml20an+AuCnDGzcFCaf3S3EAiR4cK59vl/u8TIswPIg2akh4J7qL3E/qRxN9WD945tS3h0YhJZSq7rC22wytLsxbFuKpEuYfm1i5spAQAB";
 
