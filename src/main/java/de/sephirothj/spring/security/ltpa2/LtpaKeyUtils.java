@@ -65,11 +65,6 @@ public class LtpaKeyUtils
 	private static final byte PUBLIC_EXPONENT_LENGTH = 3;
 
 	/**
-	 * the (fixed) length of the field with the private exponent
-	 */
-	private static final int PRIVATE_EXPONENT_LENGTH = 129;
-
-	/**
 	 * the length of the fields for the private factors Q and P
 	 */
 	private static final byte PRIVATE_P_Q_LENGTH = 65;
@@ -162,10 +157,12 @@ public class LtpaKeyUtils
 		{
 			byte[] parts = decrypt(Base64Utils.decodeFromString(encryptedKey), password);
 
-			// TODO: do not assume a fixed length for the private exponent and read its length from the private-exponent-length-field
-			BigInteger privateExponent = new BigInteger(Arrays.copyOfRange(parts, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + PRIVATE_EXPONENT_LENGTH));
-			BigInteger p = new BigInteger(Arrays.copyOfRange(parts, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + PRIVATE_EXPONENT_LENGTH + PUBLIC_EXPONENT_LENGTH, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + PRIVATE_EXPONENT_LENGTH + PUBLIC_EXPONENT_LENGTH + PRIVATE_P_Q_LENGTH));
-			BigInteger q = new BigInteger(Arrays.copyOfRange(parts, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + PRIVATE_EXPONENT_LENGTH + PUBLIC_EXPONENT_LENGTH + PRIVATE_P_Q_LENGTH, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + PRIVATE_EXPONENT_LENGTH + PUBLIC_EXPONENT_LENGTH + PRIVATE_P_Q_LENGTH + PRIVATE_P_Q_LENGTH));
+			// read the length of the field with the private exponent
+			int privateExponentLength = (new BigInteger(Arrays.copyOfRange(parts, 0, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH))).intValue();
+
+			BigInteger privateExponent = new BigInteger(Arrays.copyOfRange(parts, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + privateExponentLength));
+			BigInteger p = new BigInteger(Arrays.copyOfRange(parts, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + privateExponentLength + PUBLIC_EXPONENT_LENGTH, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + privateExponentLength + PUBLIC_EXPONENT_LENGTH + PRIVATE_P_Q_LENGTH));
+			BigInteger q = new BigInteger(Arrays.copyOfRange(parts, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + privateExponentLength + PUBLIC_EXPONENT_LENGTH + PRIVATE_P_Q_LENGTH, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + privateExponentLength + PUBLIC_EXPONENT_LENGTH + PRIVATE_P_Q_LENGTH + PRIVATE_P_Q_LENGTH));
 			BigInteger modulus = p.multiply(q);
 			RSAPrivateKeySpec privKeySpec = new RSAPrivateKeySpec(modulus, privateExponent);
 			KeyFactory kf = KeyFactory.getInstance("RSA");
