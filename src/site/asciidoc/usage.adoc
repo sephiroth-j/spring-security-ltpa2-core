@@ -1,10 +1,11 @@
-== Spring Security LTPA2 Example Usage
+= Spring Security LTPA2 Example Usage
 This short example shows how to use the LTPA2 Security Module. This example uses Spring Boot.
 
 == Requirements
 - Spring Security 4.2+
 - Spring Boot 1.5+
 
+== Integration
 === pom.xml
 Add it as an dependency together with you Spring Security dependencies.
 [source,xml]
@@ -107,4 +108,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 		return manager;
 	}
 }
+--
+
+== Where to put the token in a HTTP-Request
+Tokens are either taken from an HTTP header (default `Authorization` with prefix `LtpaToken2`) or a cookie (default `LtpaToken2`). Both names can be configured as needed, as well as the value prefix.
+
+**Examples**
+[source,bash]
+--
+# default header and value prefix
+curl -i -H "Authorization: LtpaToken2 <token-value>" http://localhost:8080/hello
+# custom header name without value prefix
+curl -i -H "My-Auth-Header: <token-value>" http://localhost:8080/hello
+# default cookie
+curl -i -b "LtpaToken2=<token-value>" http://localhost:8080/hello
+# custom cookie name
+curl -i -b "My-Auth-Cookie=<token-value>" http://localhost:8080/hello
 --
