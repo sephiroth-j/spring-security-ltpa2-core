@@ -16,11 +16,14 @@
 package de.sephirothj.spring.security.ltpa2;
 
 import java.lang.reflect.InvocationTargetException;
+import java.security.PublicKey;
+import javax.crypto.SecretKey;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,7 +34,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class Ltpa2FilterTest
 {
-
 	@Test
 	public void getTokenFromHeaderTestWithDefaultPrefix()
 	{
@@ -61,6 +63,10 @@ public class Ltpa2FilterTest
 	{
 		Ltpa2Filter uut = new Ltpa2Filter();
 		uut.setHeaderValueIdentifier("");
+		uut.setUserDetailsService(Mockito.mock(UserDetailsService.class));
+		uut.setSharedKey(Mockito.mock(SecretKey.class));
+		uut.setSignerKey(Mockito.mock(PublicKey.class));
+		uut.afterPropertiesSet();
 		String expected = "the-token";
 
 		String actual = ReflectionTestUtils.invokeMethod(uut, "getTokenFromHeader", expected);

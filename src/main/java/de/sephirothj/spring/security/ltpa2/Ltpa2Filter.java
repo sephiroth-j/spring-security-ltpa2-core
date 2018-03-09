@@ -24,6 +24,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
@@ -45,6 +46,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public final class Ltpa2Filter extends OncePerRequestFilter
 {
 	@Setter
+	@NonNull
 	private UserDetailsService userDetailsService;
 
 	/**
@@ -54,6 +56,7 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	 * default: {@code "LtpaToken2"}</p>
 	 */
 	@Setter
+	@NonNull
 	private String cookieName = "LtpaToken2";
 
 	/**
@@ -63,6 +66,7 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	 * default: {@code "Authorization"}</p>
 	 */
 	@Setter
+	@NonNull
 	private String headerName = "Authorization";
 
 	/**
@@ -74,18 +78,21 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	 * @see #cookieName
 	 */
 	@Setter
+	@NonNull
 	private String headerValueIdentifier = cookieName + " ";
 
 	/**
 	 * the public key from the identity provider that sends the LTPA2-tokens. required for signature validation.
 	 */
 	@Setter
+	@NonNull
 	private PublicKey signerKey;
 
 	/**
 	 * the shared secret key that is used to encrypt LTPA2 tokens
 	 */
 	@Setter
+	@NonNull
 	private SecretKey sharedKey;
 
 	/**
@@ -102,7 +109,7 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 		Assert.notNull(this.userDetailsService, "A UserDetailsService is required");
 		Assert.hasText(this.cookieName, "A cookieName is required");
 		Assert.hasText(this.headerName, "A headerName is required");
-		Assert.hasText(this.headerValueIdentifier, "A headerValueIdentifier is required");
+		Assert.notNull(this.headerValueIdentifier, "A headerValueIdentifier must not be null");
 		Assert.notNull(this.signerKey, "A signerKey is required");
 		Assert.notNull(this.sharedKey, "A sharedKey is required");
 	}
@@ -118,12 +125,10 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	}
 
 	/**
-	 * Get the LTPA2 token from the request. Either from the "Authorization" header or the Cookies.
+	 * Get the LTPA2 token from the request. Either from {@linkplain #headerName the header} or {@linkplain #cookieName a cookie}.
 	 *
 	 * @param request
 	 * @return the value of the LTPA2 token or empty string if none was found but never {@code null}
-	 * @see #headerValueIdentifier
-	 * @see #cookieName
 	 */
 	private String getTokenFromRequest(final HttpServletRequest request)
 	{
