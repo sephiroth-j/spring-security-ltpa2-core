@@ -109,7 +109,6 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 
 	private String getTokenFromHeader(final String header)
 	{
-		log.debug("header-value='{}', prefix='{}'", header, headerValueIdentifier);
 		return header != null && header.startsWith(headerValueIdentifier) ? header.substring(header.indexOf(headerValueIdentifier) + headerValueIdentifier.length()) : "";
 	}
 
