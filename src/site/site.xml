@@ -11,7 +11,7 @@
 		<menu name="Overview">
 			<item name="Introduction" href="index.html" />
 			<item name="Usage" href="usage.html" />
-			<item name="FAQ" href="FAQ.html" />
+			<item name="FAQ" href="faq.html" />
 			<item name="Links" href="links.html" />
 		</menu>
 		<menu name="Examples">
