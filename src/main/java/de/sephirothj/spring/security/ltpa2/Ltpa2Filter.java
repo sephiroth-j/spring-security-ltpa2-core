@@ -169,6 +169,16 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 		filterChain.doFilter(request, response);
 	}
 
+	/**
+	 * Verifies the given token and if it is, the method will return a {@linkplain UserDetails user record} with the help of the {@linkplain #userDetailsService configured UserDetailsService}.
+	 *
+	 * @param encryptedToken the encrpyted token that sould be verified
+	 * @return a user record but never {@code null}
+	 * @throws AuthenticationException if the token was malformed
+	 * @throws AuthenticationException if the token is expired
+	 * @throws AuthenticationException if the token signature is invalid
+	 * @throws AuthenticationException if the user was not found or has not granted authorities
+	 */
 	private UserDetails validateLtpaTokenAndLoadUser(final String encryptedToken) throws AuthenticationException
 	{
 		final String ltpaToken = Ltpa2Utils.decryptLtpa2Token(encryptedToken, sharedKey);

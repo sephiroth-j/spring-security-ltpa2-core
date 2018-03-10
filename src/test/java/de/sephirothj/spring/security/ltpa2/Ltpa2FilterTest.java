@@ -16,6 +16,9 @@
 package de.sephirothj.spring.security.ltpa2;
 
 import java.lang.reflect.InvocationTargetException;
+import java.security.GeneralSecurityException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.PublicKey;
 import javax.crypto.SecretKey;
 import javax.servlet.http.Cookie;
@@ -23,10 +26,15 @@ import javax.servlet.http.HttpServletRequest;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
 
 /**
  *
@@ -144,5 +152,46 @@ public class Ltpa2FilterTest
 		String actual = ReflectionTestUtils.invokeMethod(uut, "getTokenFromRequest", request);
 
 		assertThat(actual).isEqualTo(expected);
+	}
+
+	@Test(expected = AuthenticationException.class)
+	public void validateLtpaTokenAndLoadUserShouldRejectExpiredTokens() throws GeneralSecurityException
+	{
+		Ltpa2Filter uut = new Ltpa2Filter();
+		uut.setSharedKey(LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD));
+		String token = "Wl3qcMXdvCZjScDwB18/5VYujKDYsptVWXwNVW2yKuZw6h5Kg4amiGDeQCh2xmtNVPgCkzyk66ZWrdY70+nQEe+gotHjJtrcoW/VnbbQAwrQE5GojqK+1RdjvnwmQ9QULqcYAItw4ggZ2JF3CRR5uZ3NSFgkZpzkcMbfuYSWipNXsqEUHKONUlrg0Oc6lNKqWknx87HoPKmTnkGD5gdecu1FJCKUXSk1tanAjN3RaEWY8woxMIJQEMw/yeOrA9Fe+1nWjGAR5ITgkm+whpXfzl3n3g7kWHaBJf8DUUlKRsww4oCe3+t85b1WqoTC6FZw2qovLwn3ioRm1eIBDPO+KQZD60Ps4f+QEOjFzkLQC2f6BlZKc8KMHhffRQRpBgOD6kYV/wGDRHuvkK5vMAeJtQ==";
+
+		ReflectionTestUtils.invokeMethod(uut, "validateLtpaTokenAndLoadUser", token);
+	}
+
+	@Test
+	public void validateLtpaTokenAndLoadUserShouldAllowExpiredTokens() throws GeneralSecurityException
+	{
+		Ltpa2Filter uut = new Ltpa2Filter();
+		uut.setAllowExpiredToken(true);
+		final UserDetailsService mock = Mockito.mock(UserDetailsService.class);
+		uut.setUserDetailsService(mock);
+		uut.setSharedKey(LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD));
+		uut.setSignerKey(LtpaKeyUtils.decodePublicKey(Constants.ENCODED_PUBLIC_KEY));
+		String token = "Wl3qcMXdvCZjScDwB18/5VYujKDYsptVWXwNVW2yKuZw6h5Kg4amiGDeQCh2xmtNVPgCkzyk66ZWrdY70+nQEe+gotHjJtrcoW/VnbbQAwrQE5GojqK+1RdjvnwmQ9QULqcYAItw4ggZ2JF3CRR5uZ3NSFgkZpzkcMbfuYSWipNXsqEUHKONUlrg0Oc6lNKqWknx87HoPKmTnkGD5gdecu1FJCKUXSk1tanAjN3RaEWY8woxMIJQEMw/yeOrA9Fe+1nWjGAR5ITgkm+whpXfzl3n3g7kWHaBJf8DUUlKRsww4oCe3+t85b1WqoTC6FZw2qovLwn3ioRm1eIBDPO+KQZD60Ps4f+QEOjFzkLQC2f6BlZKc8KMHhffRQRpBgOD6kYV/wGDRHuvkK5vMAeJtQ==";
+		UserDetails mockUser = User.withUsername("test-user").roles("DEVELOPERS").password("dummy password").build();
+		BDDMockito.given(mock.loadUserByUsername(anyString())).willReturn(mockUser);
+
+		UserDetails actual = ReflectionTestUtils.invokeMethod(uut, "validateLtpaTokenAndLoadUser", token);
+		assertThat(actual).isEqualTo(mockUser);
+	}
+
+	@Test(expected = AuthenticationException.class)
+	public void validateLtpaTokenAndLoadUserShouldRejectInvalidSignatures() throws GeneralSecurityException
+	{
+		Ltpa2Filter uut = new Ltpa2Filter();
+		uut.setAllowExpiredToken(true);
+		uut.setSharedKey(LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD));
+		KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+		KeyPair pair = keyGen.generateKeyPair();
+		uut.setSignerKey(pair.getPublic());
+		String token = "Wl3qcMXdvCZjScDwB18/5VYujKDYsptVWXwNVW2yKuZw6h5Kg4amiGDeQCh2xmtNVPgCkzyk66ZWrdY70+nQEe+gotHjJtrcoW/VnbbQAwrQE5GojqK+1RdjvnwmQ9QULqcYAItw4ggZ2JF3CRR5uZ3NSFgkZpzkcMbfuYSWipNXsqEUHKONUlrg0Oc6lNKqWknx87HoPKmTnkGD5gdecu1FJCKUXSk1tanAjN3RaEWY8woxMIJQEMw/yeOrA9Fe+1nWjGAR5ITgkm+whpXfzl3n3g7kWHaBJf8DUUlKRsww4oCe3+t85b1WqoTC6FZw2qovLwn3ioRm1eIBDPO+KQZD60Ps4f+QEOjFzkLQC2f6BlZKc8KMHhffRQRpBgOD6kYV/wGDRHuvkK5vMAeJtQ==";
+
+		ReflectionTestUtils.invokeMethod(uut, "validateLtpaTokenAndLoadUser", token);
 	}
 }
