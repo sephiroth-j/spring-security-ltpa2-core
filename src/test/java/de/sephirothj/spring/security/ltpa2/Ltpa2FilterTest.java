@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
-import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
