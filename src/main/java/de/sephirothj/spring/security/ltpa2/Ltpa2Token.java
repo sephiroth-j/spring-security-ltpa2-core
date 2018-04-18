@@ -15,8 +15,9 @@
  */
 package de.sephirothj.spring.security.ltpa2;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 import lombok.Getter;
@@ -78,7 +79,7 @@ public class Ltpa2Token
 	public void setExpire(@NonNull final String expire)
 	{
 		Assert.hasText(expire, "expire must not be empty");
-		this.expire = LocalDateTime.ofEpochSecond(Long.valueOf(expire) / 1000, 0, OffsetDateTime.now().getOffset());
+		this.expire = LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.valueOf(expire)), ZoneId.systemDefault());
 	}
 
 	/**
@@ -107,7 +108,7 @@ public class Ltpa2Token
 			case USER_ATTRIBUTE_NAME:
 				return user;
 			case EXPIRE_ATTRIBUTE_NAME:
-				return String.valueOf(expire.toEpochSecond(OffsetDateTime.now().getOffset()) * 1000);
+				return String.valueOf(expire.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
 			default:
 				return additionalAttributes.get(attribute);
 		}

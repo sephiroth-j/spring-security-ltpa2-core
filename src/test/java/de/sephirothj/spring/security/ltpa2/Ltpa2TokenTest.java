@@ -16,7 +16,6 @@
 package de.sephirothj.spring.security.ltpa2;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,7 +33,6 @@ public class Ltpa2TokenTest
 		Ltpa2Token actual = Ltpa2Token.of(serializedToken);
 		assertThat(actual).isNotNull();
 		assertThat(actual.getUser()).isEqualTo("user:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar");
-		assertThat(actual.getExpire().toEpochSecond(OffsetDateTime.now().getOffset())).isEqualTo(1519043460L);
 		assertThat(actual.getExpire()).isEqualTo(LocalDateTime.of(2018, 2, 19, 13, 31, 00));
 	}
 	
