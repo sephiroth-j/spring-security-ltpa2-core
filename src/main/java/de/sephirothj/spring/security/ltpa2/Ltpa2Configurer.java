@@ -17,9 +17,9 @@ package de.sephirothj.spring.security.ltpa2;
 
 import java.security.PublicKey;
 import javax.crypto.SecretKey;
-import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.springframework.lang.NonNull;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;

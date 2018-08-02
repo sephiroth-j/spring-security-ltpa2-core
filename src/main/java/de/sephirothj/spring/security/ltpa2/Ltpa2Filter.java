@@ -24,9 +24,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -114,11 +114,13 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 		Assert.notNull(this.sharedKey, "A sharedKey is required");
 	}
 
+	@NonNull
 	private String getTokenFromHeader(final String header)
 	{
 		return header != null && header.startsWith(headerValueIdentifier) ? header.substring(header.indexOf(headerValueIdentifier) + headerValueIdentifier.length()) : "";
 	}
 
+	@NonNull
 	private String getTokenFromCookies(final Cookie... cookies)
 	{
 		return cookies != null ? Stream.of(cookies).filter(c -> c.getName().equals(cookieName)).findFirst().map(c -> c.getValue()).orElse("") : "";
@@ -130,6 +132,7 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	 * @param request
 	 * @return the value of the LTPA2 token or empty string if none was found but never {@code null}
 	 */
+	@NonNull
 	private String getTokenFromRequest(final HttpServletRequest request)
 	{
 		String ltpaToken = getTokenFromHeader(request.getHeader(headerName));
@@ -149,13 +152,13 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException
 	{
-		String ltpaToken = getTokenFromRequest(request);
+		final String ltpaToken = getTokenFromRequest(request);
 		log.debug("raw LTPA2 token: {}", ltpaToken);
 
 		try
 		{
-			UserDetails user = validateLtpaTokenAndLoadUser(ltpaToken);
-			Authentication authentication = new PreAuthenticatedAuthenticationToken(user, null, user.getAuthorities());
+			final UserDetails user = validateLtpaTokenAndLoadUser(ltpaToken);
+			final Authentication authentication = new PreAuthenticatedAuthenticationToken(user, null, user.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			log.debug("User authenticated as '{}' with roles {}", user.getUsername(), user.getAuthorities());
 		}
@@ -179,7 +182,8 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	 * @throws AuthenticationException if the token signature is invalid
 	 * @throws AuthenticationException if the user was not found or has not granted authorities
 	 */
-	private UserDetails validateLtpaTokenAndLoadUser(final String encryptedToken) throws AuthenticationException
+	@NonNull
+	private UserDetails validateLtpaTokenAndLoadUser(@NonNull final String encryptedToken) throws AuthenticationException
 	{
 		final String ltpaToken = Ltpa2Utils.decryptLtpa2Token(encryptedToken, sharedKey);
 		if (Ltpa2Utils.isTokenExpired(ltpaToken) && !allowExpiredToken)
@@ -194,7 +198,7 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 
 		try
 		{
-			Ltpa2Token token = Ltpa2Utils.makeInstance(ltpaToken);
+			final Ltpa2Token token = Ltpa2Utils.makeInstance(ltpaToken);
 			return userDetailsService.loadUserByUsername(token.getUser());
 		}
 		catch (AuthenticationException ex)

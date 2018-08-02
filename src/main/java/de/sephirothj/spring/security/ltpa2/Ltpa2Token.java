@@ -21,8 +21,9 @@ import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
@@ -101,8 +102,11 @@ public class Ltpa2Token
 	 * @param attribute the name of the attribute
 	 * @return attribute value. may be {@code null}
 	 */
+	@Nullable
 	public String getAttribute(@NonNull final String attribute)
 	{
+		Assert.notNull(attribute, "attribute must not be null");
+		
 		switch (attribute)
 		{
 			case USER_ATTRIBUTE_NAME:
@@ -119,10 +123,14 @@ public class Ltpa2Token
 	 *
 	 * @param attribute the name of the attribute
 	 * @param value attribute value
-	 * @return this istance for chaining
+	 * @return this instance for chaining
 	 */
+	@NonNull
 	public Ltpa2Token withAttribute(@NonNull final String attribute, @NonNull final String value)
 	{
+		Assert.notNull(attribute, "attribute must not be null");
+		Assert.hasText(value, "value must not be empty");
+		
 		switch (attribute)
 		{
 			case USER_ATTRIBUTE_NAME:
@@ -145,7 +153,7 @@ public class Ltpa2Token
 	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		if (expire != null)
 		{
 			sb.append(EXPIRE_ATTRIBUTE_NAME).append(BODY_KEY_VALUE_DELIMITER).append(getAttribute(EXPIRE_ATTRIBUTE_NAME)).append(BODY_PARTS_DELIMITER);
@@ -165,6 +173,7 @@ public class Ltpa2Token
 	 * @return new instance
 	 * @throws IllegalArgumentException if the given token is empty
 	 */
+	@NonNull
 	public static Ltpa2Token of(@NonNull final String serializedToken)
 	{
 		Assert.hasText(serializedToken, "serializedToken must not be empty");
@@ -184,7 +193,8 @@ public class Ltpa2Token
 	 * @param value the value to escaped
 	 * @return the value with special chars escaped
 	 */
-	private static String escapeValue(final String value)
+	@NonNull
+	private static String escapeValue(@NonNull final String value)
 	{
 		return value.replaceAll("([\\:\\$\\%])", "\\\\$1");
 	}
@@ -196,7 +206,8 @@ public class Ltpa2Token
 	 * @return the value with special chars unescaped
 	 * @see #escapeValue(java.lang.String)
 	 */
-	private static String unescapeValue(final String value)
+	@NonNull
+	private static String unescapeValue(@NonNull final String value)
 	{
 		return value.replaceAll("\\\\([\\:\\$\\%])", "$1");
 	}

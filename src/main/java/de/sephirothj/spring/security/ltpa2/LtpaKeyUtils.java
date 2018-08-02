@@ -36,8 +36,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import lombok.NonNull;
 import lombok.experimental.UtilityClass;
+import org.springframework.lang.NonNull;
+import org.springframework.util.Assert;
 import org.springframework.util.Base64Utils;
 
 /**
@@ -89,10 +90,13 @@ public class LtpaKeyUtils
 	 */
 	private byte[] decrypt(@NonNull final byte[] encrypted, @NonNull final String password) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException
 	{
-		MessageDigest md = MessageDigest.getInstance("SHA");
-		byte[] pwdHash = Arrays.copyOfRange(md.digest(password.getBytes()), 0, 24);
-		Cipher c = Cipher.getInstance("DESede/ECB/PKCS5Padding");
-		Key decryptionKey = SecretKeyFactory.getInstance("DESede").generateSecret(new DESedeKeySpec(pwdHash));
+		Assert.notNull(encrypted, "encrypted must not be null");
+		Assert.hasText(password, "password must not be empty");
+		
+		final MessageDigest md = MessageDigest.getInstance("SHA");
+		final byte[] pwdHash = Arrays.copyOfRange(md.digest(password.getBytes()), 0, 24);
+		final Cipher c = Cipher.getInstance("DESede/ECB/PKCS5Padding");
+		final Key decryptionKey = SecretKeyFactory.getInstance("DESede").generateSecret(new DESedeKeySpec(pwdHash));
 		c.init(Cipher.DECRYPT_MODE, decryptionKey);
 		return c.doFinal(encrypted);
 	}
@@ -101,16 +105,20 @@ public class LtpaKeyUtils
 	 * decrypts the shared secret key ({@code com.ibm.websphere.ltpa.3DESKey}) that is used to encrypt a serialized LTPA2 token
 	 *
 	 * @param encryptedKey the base64-encoded and with 3DES encrypted key
-	 * @param password the password for decryption
+	 * @param password the password for decryption (attribute {@code keysPassword} in your server configuration)
 	 * @return the decrypted key
 	 * @throws GeneralSecurityException if anything went wrong
 	 */
+	@NonNull
 	public SecretKey decryptSharedKey(@NonNull final String encryptedKey, @NonNull final String password) throws GeneralSecurityException
 	{
+		Assert.notNull(encryptedKey, "encryptedKey must not be null");
+		Assert.hasText(password, "password must not be empty");
+		
 		try
 		{
 			final byte[] decodeFromString = Base64Utils.decodeFromString(encryptedKey);
-			byte[] secret = decrypt(decodeFromString, password);
+			final byte[] secret = decrypt(decodeFromString, password);
 			return new SecretKeySpec(secret, 0, SHARED_KEY_SIZE, "AES");
 		}
 		catch (InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException ex)
@@ -126,15 +134,18 @@ public class LtpaKeyUtils
 	 * @return the decoded public key
 	 * @throws GeneralSecurityException if anything went wrong
 	 */
+	@NonNull
 	public PublicKey decodePublicKey(@NonNull final String encryptedPublicKey) throws GeneralSecurityException
 	{
+		Assert.hasText(encryptedPublicKey, "encryptedPublicKey must not be empty");
+		
 		try
 		{
-			byte[] parts = Base64Utils.decodeFromString(encryptedPublicKey);
-			BigInteger modulus = new BigInteger(Arrays.copyOfRange(parts, 0, PUBLIC_MODULUS_LENGTH));
-			BigInteger exponent = new BigInteger(Arrays.copyOfRange(parts, PUBLIC_MODULUS_LENGTH, PUBLIC_MODULUS_LENGTH + PUBLIC_EXPONENT_LENGTH));
-			RSAPublicKeySpec pubKeySpec = new RSAPublicKeySpec(modulus, exponent);
-			KeyFactory kf = KeyFactory.getInstance("RSA");
+			final byte[] parts = Base64Utils.decodeFromString(encryptedPublicKey);
+			final BigInteger modulus = new BigInteger(Arrays.copyOfRange(parts, 0, PUBLIC_MODULUS_LENGTH));
+			final BigInteger exponent = new BigInteger(Arrays.copyOfRange(parts, PUBLIC_MODULUS_LENGTH, PUBLIC_MODULUS_LENGTH + PUBLIC_EXPONENT_LENGTH));
+			final RSAPublicKeySpec pubKeySpec = new RSAPublicKeySpec(modulus, exponent);
+			final KeyFactory kf = KeyFactory.getInstance("RSA");
 			return kf.generatePublic(pubKeySpec);
 		}
 		catch (NoSuchAlgorithmException | InvalidKeySpecException ex)
@@ -151,21 +162,25 @@ public class LtpaKeyUtils
 	 * @return the decrypted key
 	 * @throws GeneralSecurityException if anything went wrong
 	 */
+	@NonNull
 	public PrivateKey decryptPrivateKey(@NonNull final String encryptedKey, @NonNull final String password) throws GeneralSecurityException
 	{
+		Assert.hasText(encryptedKey, "encryptedKey must not be empty");
+		Assert.hasText(password, "password must not be empty");
+		
 		try
 		{
-			byte[] parts = decrypt(Base64Utils.decodeFromString(encryptedKey), password);
+			final byte[] parts = decrypt(Base64Utils.decodeFromString(encryptedKey), password);
 
 			// read the length of the field with the private exponent
-			int privateExponentLength = (new BigInteger(Arrays.copyOfRange(parts, 0, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH))).intValue();
+			final int privateExponentLength = (new BigInteger(Arrays.copyOfRange(parts, 0, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH))).intValue();
 
-			BigInteger privateExponent = new BigInteger(Arrays.copyOfRange(parts, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + privateExponentLength));
-			BigInteger p = new BigInteger(Arrays.copyOfRange(parts, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + privateExponentLength + PUBLIC_EXPONENT_LENGTH, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + privateExponentLength + PUBLIC_EXPONENT_LENGTH + PRIVATE_P_Q_LENGTH));
-			BigInteger q = new BigInteger(Arrays.copyOfRange(parts, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + privateExponentLength + PUBLIC_EXPONENT_LENGTH + PRIVATE_P_Q_LENGTH, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + privateExponentLength + PUBLIC_EXPONENT_LENGTH + PRIVATE_P_Q_LENGTH + PRIVATE_P_Q_LENGTH));
-			BigInteger modulus = p.multiply(q);
-			RSAPrivateKeySpec privKeySpec = new RSAPrivateKeySpec(modulus, privateExponent);
-			KeyFactory kf = KeyFactory.getInstance("RSA");
+			final BigInteger privateExponent = new BigInteger(Arrays.copyOfRange(parts, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + privateExponentLength));
+			final BigInteger p = new BigInteger(Arrays.copyOfRange(parts, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + privateExponentLength + PUBLIC_EXPONENT_LENGTH, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + privateExponentLength + PUBLIC_EXPONENT_LENGTH + PRIVATE_P_Q_LENGTH));
+			final BigInteger q = new BigInteger(Arrays.copyOfRange(parts, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + privateExponentLength + PUBLIC_EXPONENT_LENGTH + PRIVATE_P_Q_LENGTH, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + privateExponentLength + PUBLIC_EXPONENT_LENGTH + PRIVATE_P_Q_LENGTH + PRIVATE_P_Q_LENGTH));
+			final BigInteger modulus = p.multiply(q);
+			final RSAPrivateKeySpec privKeySpec = new RSAPrivateKeySpec(modulus, privateExponent);
+			final KeyFactory kf = KeyFactory.getInstance("RSA");
 			return kf.generatePrivate(privKeySpec);
 		}
 		catch (InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException ex)

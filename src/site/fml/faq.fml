@@ -30,7 +30,7 @@ com.ibm.websphere.ltpa.PublicKey=AOECPMDAs0o7MzQIgxZhAXJZ2BaDE3mqRZAbkbQO38CgUIg
 		<faq id="password">
 			<question>And where do I find the password for the shared key?</question>
 			<answer>
-				<p>In the attribute <code>keysPassword</code> in your server configuration. If it is xor encoded (which it probably is), you can decode it. There is <a href="http://www.devops-insight.com/2014/08/how-to-decode-websphere-passwords.html">this litte tutorial</a> that will help you to do so.</p>
+				<p>In the attribute <code>keysPassword</code> in your server configuration. If it is xor encoded (which it probably is), you can decode it. There is <a href="http://www.devops-insight.com/2014/08/how-to-decode-websphere-passwords.html">this litte tutorial</a> that will help you to do so. Or <a href="https://strelitzia.net/wasXORdecoder/wasXORdecoder.html">you can use this site</a> which has a JavaScript implementation (check the source of the page). Or <a href="https://lmgtfy.com/?q=decode+Websphere+passwords">just google it</a>!</p>
 			</answer>
 		</faq>
 	</part>
