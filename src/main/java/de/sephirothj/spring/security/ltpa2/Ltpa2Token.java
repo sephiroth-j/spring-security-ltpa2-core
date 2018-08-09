@@ -54,10 +54,9 @@ public class Ltpa2Token
 	private LocalDateTime expire;
 
 	/**
-	 * username
+	 * user DN
 	 */
 	@Getter
-	@Setter
 	private String user;
 
 	private final HashMap<String, String> additionalAttributes = new HashMap<>();
@@ -69,6 +68,7 @@ public class Ltpa2Token
 	 */
 	public void setExpire(@NonNull final LocalDateTime expire)
 	{
+		Assert.notNull(expire, "expire must not be null");
 		this.expire = expire;
 	}
 
@@ -81,6 +81,17 @@ public class Ltpa2Token
 	{
 		Assert.hasText(expire, "expire must not be empty");
 		this.expire = LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.valueOf(expire)), ZoneId.systemDefault());
+	}
+
+	/**
+	 * sets the user of the token
+	 *
+	 * @param user the (new) user DN
+	 */
+	public void setUser(@NonNull final String user)
+	{
+		Assert.hasText(user, "user must not be empty");
+		this.user = user;
 	}
 
 	/**
@@ -106,7 +117,7 @@ public class Ltpa2Token
 	public String getAttribute(@NonNull final String attribute)
 	{
 		Assert.notNull(attribute, "attribute must not be null");
-		
+
 		switch (attribute)
 		{
 			case USER_ATTRIBUTE_NAME:
@@ -130,7 +141,7 @@ public class Ltpa2Token
 	{
 		Assert.notNull(attribute, "attribute must not be null");
 		Assert.hasText(value, "value must not be empty");
-		
+
 		switch (attribute)
 		{
 			case USER_ATTRIBUTE_NAME:
