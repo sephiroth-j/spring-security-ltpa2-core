@@ -138,14 +138,27 @@ public class Ltpa2Utils
 		
 		try
 		{
-			Ltpa2Token instance = makeInstance(token);
-			LocalDateTime expires = instance.getExpire();
-			return expires.isBefore(LocalDateTime.now());
+			final Ltpa2Token instance = makeInstance(token);
+			return isTokenExpired(instance);
 		}
 		catch (IllegalArgumentException e)
 		{
 			throw new InvalidLtpa2TokenException("token is malformed");
 		}
+	}
+
+	/**
+	 * checks if the given token is expired
+	 *
+	 * @param token a LTPA2 token instance
+	 * @return whether the given token is expired or not
+	 */
+	boolean isTokenExpired(@NonNull final Ltpa2Token token)
+	{
+		Assert.notNull(token, "token must not be null");
+		
+		final LocalDateTime expires = token.getExpire();
+		return expires.isBefore(LocalDateTime.now());
 	}
 
 	/**
