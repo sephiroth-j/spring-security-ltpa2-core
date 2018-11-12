@@ -1,4 +1,7 @@
 # Spring Security LTPA2
+
+[![Build Status](https://travis-ci.com/sephiroth-j/spring-security-ltpa2-sample.svg?branch=master)](https://travis-ci.com/sephiroth-j/spring-security-ltpa2-sample) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=sephiroth-j_spring-security-ltpa2-core&metric=alert_status)](https://sonarcloud.io/dashboard?id=sephiroth-j_spring-security-ltpa2-core)
+
 Add Spring Security support for user pre-authentication using IBM Lightweight Third Party Authentication (LTPA) v2. LTPA2 tokens can be created as well.
 
 Tokens are either taken from an HTTP header (default `Authorization` with prefix `LtpaToken2`) or a cookie (default `LtpaToken2`). Both names can be configured as needed, as well as the value prefix.
