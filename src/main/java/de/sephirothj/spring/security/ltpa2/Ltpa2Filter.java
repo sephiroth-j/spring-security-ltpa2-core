@@ -123,7 +123,7 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	@NonNull
 	private String getTokenFromCookies(final Cookie... cookies)
 	{
-		return cookies != null ? Stream.of(cookies).filter(c -> c.getName().equals(cookieName)).findFirst().map(c -> c.getValue()).orElse("") : "";
+		return cookies != null ? Stream.of(cookies).filter(c -> c.getName().equals(cookieName)).findFirst().map(Cookie::getValue).orElse("") : "";
 	}
 
 	/**

@@ -48,6 +48,9 @@ public class Ltpa2Utils
 	private static final String TOKEN_ENCRYPTION_ALGORITHM = "AES/CBC/PKCS5Padding";
 	private static final String SIGNATURE_ALGORITM = "SHA1withRSA";
 	private static final String SIGNATURE_DIGEST_METHOD = "SHA";
+	private static final String TOKEN_MUST_NOT_BE_EMPTY = "token must not be empty";
+	private static final String KEY_MUST_NOT_BE_NULL = "key must not be null";
+	private static final String TOKEN_IS_MALFORMED = "token is malformed";
 
 	/**
 	 * decrypts an base64-encoded LTPA2 token
@@ -61,7 +64,7 @@ public class Ltpa2Utils
 	String decryptLtpa2Token(@NonNull final String encryptedToken, @NonNull final SecretKey key) throws InvalidLtpa2TokenException
 	{
 		Assert.hasText(encryptedToken, "encryptedToken must not be empty");
-		Assert.notNull(key, "key must not be null");
+		Assert.notNull(key, KEY_MUST_NOT_BE_NULL);
 		
 		try
 		{
@@ -88,7 +91,7 @@ public class Ltpa2Utils
 	 */
 	private String[] getTokenParts(@NonNull final String token) throws IllegalArgumentException
 	{
-		Assert.hasText(token, "token must not be empty");
+		Assert.hasText(token, TOKEN_MUST_NOT_BE_EMPTY);
 		Assert.hasText(token, "serializedToken must not be empty");
 		
 		final String[] tokenParts = token.split("\\%", 3);
@@ -121,7 +124,7 @@ public class Ltpa2Utils
 		}
 		catch (IllegalArgumentException e)
 		{
-			throw new InvalidLtpa2TokenException("token is malformed");
+			throw new InvalidLtpa2TokenException(TOKEN_IS_MALFORMED);
 		}
 	}
 
@@ -134,7 +137,7 @@ public class Ltpa2Utils
 	 */
 	boolean isTokenExpired(@NonNull final String token) throws InvalidLtpa2TokenException
 	{
-		Assert.hasText(token, "token must not be empty");
+		Assert.hasText(token, TOKEN_MUST_NOT_BE_EMPTY);
 		
 		try
 		{
@@ -143,7 +146,7 @@ public class Ltpa2Utils
 		}
 		catch (IllegalArgumentException e)
 		{
-			throw new InvalidLtpa2TokenException("token is malformed");
+			throw new InvalidLtpa2TokenException(TOKEN_IS_MALFORMED);
 		}
 	}
 
@@ -175,7 +178,7 @@ public class Ltpa2Utils
 	 */
 	boolean isSignatureValid(@NonNull final String token, @NonNull final String signerKey) throws InvalidLtpa2TokenException
 	{
-		Assert.hasText(token, "token must not be empty");
+		Assert.hasText(token, TOKEN_MUST_NOT_BE_EMPTY);
 		Assert.hasText(signerKey, "signerKey must not be empty");
 		
 		try
@@ -199,7 +202,7 @@ public class Ltpa2Utils
 	 */
 	boolean isSignatureValid(@NonNull final String token, @NonNull final PublicKey signerKey) throws InvalidLtpa2TokenException
 	{
-		Assert.hasText(token, "token must not be empty");
+		Assert.hasText(token, TOKEN_MUST_NOT_BE_EMPTY);
 		Assert.notNull(signerKey, "signerKey must not be null");
 		
 		try
@@ -218,7 +221,7 @@ public class Ltpa2Utils
 		}
 		catch (IllegalArgumentException e)
 		{
-			throw new InvalidLtpa2TokenException("token is malformed");
+			throw new InvalidLtpa2TokenException(TOKEN_IS_MALFORMED);
 		}
 	}
 
@@ -234,8 +237,8 @@ public class Ltpa2Utils
 	@NonNull
 	String signToken(@NonNull final String token, @NonNull final PrivateKey key) throws InvalidLtpa2TokenException
 	{
-		Assert.hasText(token, "token must not be empty");
-		Assert.notNull(key, "key must not be null");
+		Assert.hasText(token, TOKEN_MUST_NOT_BE_EMPTY);
+		Assert.notNull(key, KEY_MUST_NOT_BE_NULL);
 		
 		try
 		{
@@ -267,7 +270,7 @@ public class Ltpa2Utils
 	{
 		Assert.notNull(token, "token must not be null");
 		Assert.notNull(signerKey, "signerKey must not be null");
-		Assert.notNull(key, "key must not be null");
+		Assert.notNull(key, KEY_MUST_NOT_BE_NULL);
 		
 		final String serializedToken = token.toString();
 		final String signature = signToken(serializedToken, signerKey);

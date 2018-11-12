@@ -49,6 +49,7 @@ import org.springframework.util.Base64Utils;
 @UtilityClass
 public class LtpaKeyUtils
 {
+	private static final String PASSWORD_MUST_NOT_BE_EMPTY = "password must not be empty";
 
 	/**
 	 * the size of the shared secret key in byte
@@ -91,7 +92,7 @@ public class LtpaKeyUtils
 	private byte[] decrypt(@NonNull final byte[] encrypted, @NonNull final String password) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException
 	{
 		Assert.notNull(encrypted, "encrypted must not be null");
-		Assert.hasText(password, "password must not be empty");
+		Assert.hasText(password, PASSWORD_MUST_NOT_BE_EMPTY);
 		
 		final MessageDigest md = MessageDigest.getInstance("SHA");
 		final byte[] pwdHash = Arrays.copyOfRange(md.digest(password.getBytes()), 0, 24);
@@ -113,7 +114,7 @@ public class LtpaKeyUtils
 	public SecretKey decryptSharedKey(@NonNull final String encryptedKey, @NonNull final String password) throws GeneralSecurityException
 	{
 		Assert.notNull(encryptedKey, "encryptedKey must not be null");
-		Assert.hasText(password, "password must not be empty");
+		Assert.hasText(password, PASSWORD_MUST_NOT_BE_EMPTY);
 		
 		try
 		{
@@ -166,7 +167,7 @@ public class LtpaKeyUtils
 	public PrivateKey decryptPrivateKey(@NonNull final String encryptedKey, @NonNull final String password) throws GeneralSecurityException
 	{
 		Assert.hasText(encryptedKey, "encryptedKey must not be empty");
-		Assert.hasText(password, "password must not be empty");
+		Assert.hasText(password, PASSWORD_MUST_NOT_BE_EMPTY);
 		
 		try
 		{

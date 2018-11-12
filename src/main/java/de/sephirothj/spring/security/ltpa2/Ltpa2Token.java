@@ -21,7 +21,6 @@ import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
@@ -169,10 +168,7 @@ public class Ltpa2Token
 		{
 			sb.append(EXPIRE_ATTRIBUTE_NAME).append(BODY_KEY_VALUE_DELIMITER).append(getAttribute(EXPIRE_ATTRIBUTE_NAME)).append(BODY_PARTS_DELIMITER);
 		}
-		additionalAttributes.forEach((key, value) ->
-		{
-			sb.append(key).append(BODY_KEY_VALUE_DELIMITER).append(escapeValue(value)).append(BODY_PARTS_DELIMITER);
-		});
+		additionalAttributes.forEach((key, value) -> sb.append(key).append(BODY_KEY_VALUE_DELIMITER).append(escapeValue(value)).append(BODY_PARTS_DELIMITER));
 		sb.append(USER_ATTRIBUTE_NAME).append(BODY_KEY_VALUE_DELIMITER).append(escapeValue(user));
 		return sb.toString();
 	}
@@ -192,7 +188,7 @@ public class Ltpa2Token
 		final Ltpa2Token token = new Ltpa2Token();
 		BODY_PARTS_PATTERN.splitAsStream(serializedToken).forEach(part ->
 		{
-			final String nameValue[] = part.split(BODY_KEY_VALUE_DELIMITER, 2);
+			final String[] nameValue = part.split(BODY_KEY_VALUE_DELIMITER, 2);
 			token.withAttribute(nameValue[0], unescapeValue(nameValue[1]));
 		});
 		return token;
