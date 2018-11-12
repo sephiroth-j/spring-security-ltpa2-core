@@ -16,8 +16,8 @@
 package de.sephirothj.spring.security.ltpa2;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.util.TimeZone;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,6 +28,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class Ltpa2TokenTest
 {
+	@BeforeClass
+	public static void setDefaultTimezone() {
+		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Berlin"));
+	}
+	
 	@Test
 	public void testOf()
 	{
@@ -35,7 +40,7 @@ public class Ltpa2TokenTest
 		Ltpa2Token actual = Ltpa2Token.of(serializedToken);
 		assertThat(actual).isNotNull();
 		assertThat(actual.getAttribute(Ltpa2Token.USER_ATTRIBUTE_NAME)).isEqualTo("user:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar");
-		assertThat(actual.getExpire()).isEqualToIgnoringNanos(ZonedDateTime.of(LocalDateTime.of(2018, 2, 19, 13, 31, 00), ZoneId.of("Europe/Berlin")).toLocalDateTime());
+		assertThat(actual.getExpire()).isEqualToIgnoringNanos(LocalDateTime.of(2018, 2, 19, 13, 31, 00));
 		assertThat(actual.getAttribute("attribute")).isEqualTo("value");
 	}
 	
@@ -45,7 +50,7 @@ public class Ltpa2TokenTest
 		Ltpa2Token token = new Ltpa2Token();
 		token.withAttribute("attribute", "value");
 		token.setUser("user:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar");
-		token.setExpire(ZonedDateTime.of(LocalDateTime.of(2018, 2, 21, 21, 49, 29), ZoneId.of("Europe/Berlin")).toLocalDateTime());
+		token.setExpire(LocalDateTime.of(2018, 2, 21, 21, 49, 29));
 		assertThat(token.toString()).isEqualTo("expire:1519246169000$attribute:value$u:user\\:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar");
 	}
 }
