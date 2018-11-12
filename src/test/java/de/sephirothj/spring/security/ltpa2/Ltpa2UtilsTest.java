@@ -18,6 +18,8 @@ package de.sephirothj.spring.security.ltpa2;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import javax.crypto.SecretKey;
 import org.junit.Test;
 
@@ -53,7 +55,7 @@ public class Ltpa2UtilsTest
 		Ltpa2Token actual = Ltpa2Utils.makeInstance(getTestToken());
 
 		assertThat(actual).isNotNull();
-		assertThat(actual.getExpire()).isEqualTo(LocalDateTime.of(2018, 2, 19, 13, 31, 00));
+		assertThat(actual.getExpire()).isEqualToIgnoringNanos(ZonedDateTime.of(LocalDateTime.of(2018, 2, 19, 13, 31, 00), ZoneId.of("Europe/Berlin")).toLocalDateTime());
 		assertThat(actual.getUser()).isNotEmpty();
 	}
 
