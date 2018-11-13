@@ -52,7 +52,7 @@ import org.springframework.util.Assert;
  * }
  * </pre>
  * <p>
- * <b>A {@link UserDetailsService} is required!</b> I case none no instance exposed, you have to provide one using {@link org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder#userDetailsService(org.springframework.security.core.userdetails.UserDetailsService) AuthenticationManagerBuilder#userDetailsService}.</p>
+ * <b>A {@link UserDetailsService} is required!</b> In case no instance is exposed, you have to provide one using {@link org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder#userDetailsService(org.springframework.security.core.userdetails.UserDetailsService) AuthenticationManagerBuilder#userDetailsService}.</p>
  *
  * @author Sephiroth
  */
@@ -122,6 +122,7 @@ public class Ltpa2Configurer extends AbstractHttpConfigurer<Ltpa2Configurer, Htt
 		ltpaFilter.setSharedKey(sharedKey);
 		ltpaFilter.setSignerKey(signerKey);
 		ltpaFilter.setAllowExpiredToken(allowExpiredToken);
+		ltpaFilter.afterPropertiesSet();
 		builder.addFilterAt(ltpaFilter, AbstractPreAuthenticatedProcessingFilter.class);
 	}
 
