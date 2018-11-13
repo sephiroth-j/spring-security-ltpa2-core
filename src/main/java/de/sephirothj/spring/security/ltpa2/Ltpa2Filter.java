@@ -106,12 +106,12 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	@Override
 	public void afterPropertiesSet()
 	{
-		Assert.notNull(this.userDetailsService, "A UserDetailsService is required");
-		Assert.hasText(this.cookieName, "A cookieName is required");
-		Assert.hasText(this.headerName, "A headerName is required");
-		Assert.notNull(this.headerValueIdentifier, "A headerValueIdentifier must not be null");
-		Assert.notNull(this.signerKey, "A signerKey is required");
-		Assert.notNull(this.sharedKey, "A sharedKey is required");
+		Assert.notNull(userDetailsService, "A UserDetailsService is required");
+		Assert.hasText(cookieName, "A cookieName is required");
+		Assert.hasText(headerName, "A headerName is required");
+		Assert.notNull(headerValueIdentifier, "A headerValueIdentifier must not be null");
+		Assert.notNull(signerKey, "A signerKey is required");
+		Assert.notNull(sharedKey, "A sharedKey is required");
 	}
 
 	@NonNull
