@@ -122,7 +122,7 @@ public class Ltpa2Token
 			case USER_ATTRIBUTE_NAME:
 				return user;
 			case EXPIRE_ATTRIBUTE_NAME:
-				return String.valueOf(expire.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+				return expire != null ? String.valueOf(expire.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()) : null;
 			default:
 				return additionalAttributes.get(attribute);
 		}
