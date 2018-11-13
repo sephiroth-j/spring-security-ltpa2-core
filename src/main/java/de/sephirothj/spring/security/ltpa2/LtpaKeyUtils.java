@@ -143,13 +143,14 @@ public class LtpaKeyUtils
 		try
 		{
 			final byte[] parts = Base64Utils.decodeFromString(encryptedPublicKey);
+			Assert.isTrue(parts.length == PUBLIC_MODULUS_LENGTH + PUBLIC_EXPONENT_LENGTH, "invalid encryptedPublicKey");
 			final BigInteger modulus = new BigInteger(Arrays.copyOfRange(parts, 0, PUBLIC_MODULUS_LENGTH));
 			final BigInteger exponent = new BigInteger(Arrays.copyOfRange(parts, PUBLIC_MODULUS_LENGTH, PUBLIC_MODULUS_LENGTH + PUBLIC_EXPONENT_LENGTH));
 			final RSAPublicKeySpec pubKeySpec = new RSAPublicKeySpec(modulus, exponent);
 			final KeyFactory kf = KeyFactory.getInstance("RSA");
 			return kf.generatePublic(pubKeySpec);
 		}
-		catch (NoSuchAlgorithmException | InvalidKeySpecException ex)
+		catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException ex)
 		{
 			throw new GeneralSecurityException("failed to decoded public key", ex);
 		}
@@ -184,7 +185,7 @@ public class LtpaKeyUtils
 			final KeyFactory kf = KeyFactory.getInstance("RSA");
 			return kf.generatePrivate(privKeySpec);
 		}
-		catch (InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException ex)
+		catch (InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException | ArrayIndexOutOfBoundsException ex)
 		{
 			throw new GeneralSecurityException("failed to decrypt private key", ex);
 		}
