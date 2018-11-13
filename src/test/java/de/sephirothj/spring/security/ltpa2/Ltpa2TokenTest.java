@@ -17,8 +17,8 @@ package de.sephirothj.spring.security.ltpa2;
 
 import java.time.LocalDateTime;
 import java.util.TimeZone;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,10 +28,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class Ltpa2TokenTest
 {
-	@BeforeClass
-	public static void setDefaultTimezone() {
-		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Berlin"));
-	}
+	@RegisterExtension
+	static TimeZoneExtension tz = new TimeZoneExtension(TimeZone.getTimeZone("Europe/Berlin"));
 	
 	@Test
 	public void testOf()

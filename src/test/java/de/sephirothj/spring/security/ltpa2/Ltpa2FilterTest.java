@@ -21,9 +21,11 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PublicKey;
 import javax.crypto.SecretKey;
+import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.security.core.AuthenticationException;
@@ -153,14 +155,18 @@ public class Ltpa2FilterTest
 		assertThat(actual).isEqualTo(expected);
 	}
 
-	@Test(expected = AuthenticationException.class)
+	@Test
 	public void validateLtpaTokenAndLoadUserShouldRejectExpiredTokens() throws GeneralSecurityException
 	{
 		Ltpa2Filter uut = new Ltpa2Filter();
 		uut.setSharedKey(LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD));
 		String token = "Wl3qcMXdvCZjScDwB18/5VYujKDYsptVWXwNVW2yKuZw6h5Kg4amiGDeQCh2xmtNVPgCkzyk66ZWrdY70+nQEe+gotHjJtrcoW/VnbbQAwrQE5GojqK+1RdjvnwmQ9QULqcYAItw4ggZ2JF3CRR5uZ3NSFgkZpzkcMbfuYSWipNXsqEUHKONUlrg0Oc6lNKqWknx87HoPKmTnkGD5gdecu1FJCKUXSk1tanAjN3RaEWY8woxMIJQEMw/yeOrA9Fe+1nWjGAR5ITgkm+whpXfzl3n3g7kWHaBJf8DUUlKRsww4oCe3+t85b1WqoTC6FZw2qovLwn3ioRm1eIBDPO+KQZD60Ps4f+QEOjFzkLQC2f6BlZKc8KMHhffRQRpBgOD6kYV/wGDRHuvkK5vMAeJtQ==";
 
-		ReflectionTestUtils.invokeMethod(uut, "validateLtpaTokenAndLoadUser", token);
+		AuthenticationException expected = Assertions.assertThrows(AuthenticationException.class, () ->
+		{
+			ReflectionTestUtils.invokeMethod(uut, "validateLtpaTokenAndLoadUser", token);
+		});
+		assertThat(expected).hasMessage("token expired");
 	}
 
 	@Test
@@ -180,7 +186,7 @@ public class Ltpa2FilterTest
 		assertThat(actual).isEqualTo(mockUser);
 	}
 
-	@Test(expected = AuthenticationException.class)
+	@Test
 	public void validateLtpaTokenAndLoadUserShouldRejectInvalidSignatures() throws GeneralSecurityException
 	{
 		Ltpa2Filter uut = new Ltpa2Filter();
@@ -191,6 +197,39 @@ public class Ltpa2FilterTest
 		uut.setSignerKey(pair.getPublic());
 		String token = "Wl3qcMXdvCZjScDwB18/5VYujKDYsptVWXwNVW2yKuZw6h5Kg4amiGDeQCh2xmtNVPgCkzyk66ZWrdY70+nQEe+gotHjJtrcoW/VnbbQAwrQE5GojqK+1RdjvnwmQ9QULqcYAItw4ggZ2JF3CRR5uZ3NSFgkZpzkcMbfuYSWipNXsqEUHKONUlrg0Oc6lNKqWknx87HoPKmTnkGD5gdecu1FJCKUXSk1tanAjN3RaEWY8woxMIJQEMw/yeOrA9Fe+1nWjGAR5ITgkm+whpXfzl3n3g7kWHaBJf8DUUlKRsww4oCe3+t85b1WqoTC6FZw2qovLwn3ioRm1eIBDPO+KQZD60Ps4f+QEOjFzkLQC2f6BlZKc8KMHhffRQRpBgOD6kYV/wGDRHuvkK5vMAeJtQ==";
 
-		ReflectionTestUtils.invokeMethod(uut, "validateLtpaTokenAndLoadUser", token);
+		AuthenticationException expected = Assertions.assertThrows(AuthenticationException.class, () ->
+		{
+			ReflectionTestUtils.invokeMethod(uut, "validateLtpaTokenAndLoadUser", token);
+		});
+		assertThat(expected).hasMessage("failed to verify token signature");
+	}
+
+	@Test
+	void shouldNotFilterTestWithEmptyHeadersAndCookies() throws ServletException
+	{
+		Ltpa2Filter uut = new Ltpa2Filter();
+		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+		assertThat(uut.shouldNotFilter(request)).isTrue();
+	}
+
+	@Test
+	void shouldNotFilterTestWithHeaderOnly() throws ServletException
+	{
+		Ltpa2Filter uut = new Ltpa2Filter();
+		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+		BDDMockito.given(request.getHeader("Authorization")).willReturn("LtpaToken2 dummy-token");
+		assertThat(uut.shouldNotFilter(request)).isFalse();
+	}
+
+	@Test
+	void shouldNotFilterTestWithCookieIOnly() throws ServletException
+	{
+		Ltpa2Filter uut = new Ltpa2Filter();
+		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+		BDDMockito.given(request.getCookies()).will(i -> new Cookie[]
+		{
+			new Cookie("LtpaToken2", "dummy-token")
+		});
+		assertThat(uut.shouldNotFilter(request)).isFalse();
 	}
 }

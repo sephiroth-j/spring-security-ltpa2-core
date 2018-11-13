@@ -19,7 +19,8 @@ import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import javax.crypto.SecretKey;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,7 +30,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class LtpaKeyUtilsTest
 {
-
 	@Test
 	public void decryptSharedKeyTest() throws GeneralSecurityException
 	{
@@ -41,15 +41,25 @@ public class LtpaKeyUtilsTest
 	}
 
 	@Test
+	public void decryptSharedKeyTestWithError()
+	{
+		GeneralSecurityException expected = Assertions.assertThrows(GeneralSecurityException.class, () ->
+		{
+			LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, "foo");
+		});
+		assertThat(expected).hasMessage("failed to decrypt shared key");
+	}
+
+	@Test
 	public void decodePublicKeyTest() throws GeneralSecurityException
 	{
 		PublicKey actual = LtpaKeyUtils.decodePublicKey(Constants.ENCODED_PUBLIC_KEY);
-		
+
 		assertThat(actual).isNotNull();
 		assertThat(actual.getAlgorithm()).isEqualTo("RSA");
 		assertThat(actual.getFormat()).isEqualTo("X.509");
 	}
-	
+
 	@Test
 	public void decryptPrivateKeyTest() throws GeneralSecurityException
 	{
@@ -58,5 +68,15 @@ public class LtpaKeyUtilsTest
 		assertThat(actual).isNotNull();
 		assertThat(actual.getAlgorithm()).isEqualTo("RSA");
 		assertThat(actual.getFormat()).isEqualTo("PKCS#8");
+	}
+
+	@Test
+	public void decryptPrivateKeyTestWithError() throws GeneralSecurityException
+	{
+		GeneralSecurityException expected = Assertions.assertThrows(GeneralSecurityException.class, () ->
+		{
+			LtpaKeyUtils.decryptPrivateKey(Constants.ENCRYPTED_PRIVATE_KEY, "asdgh");
+		});
+		assertThat(expected).hasMessage("failed to decrypt private key");
 	}
 }

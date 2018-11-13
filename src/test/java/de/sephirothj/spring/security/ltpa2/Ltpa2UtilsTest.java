@@ -20,8 +20,10 @@ import java.security.PrivateKey;
 import java.time.LocalDateTime;
 import java.util.TimeZone;
 import javax.crypto.SecretKey;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import javax.crypto.spec.SecretKeySpec;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,11 +33,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class Ltpa2UtilsTest
 {
-	@BeforeClass
-	public static void setDefaultTimezone() {
-		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Berlin"));
-	}
-	
+	@RegisterExtension
+	static TimeZoneExtension tz = new TimeZoneExtension(TimeZone.getTimeZone("Europe/Berlin"));
+
 	private static String getTestToken() throws GeneralSecurityException
 	{
 		SecretKey secretKey = LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD);
@@ -55,6 +55,17 @@ public class Ltpa2UtilsTest
 	}
 
 	@Test
+	public void decryptLtpaToken2TestWithMalformedToken() throws GeneralSecurityException
+	{
+		SecretKey secretKey = LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD);
+		InvalidLtpa2TokenException expected = Assertions.assertThrows(InvalidLtpa2TokenException.class, () ->
+		{
+			Ltpa2Utils.decryptLtpa2Token("wekrcn kldgj", secretKey);
+		});
+		assertThat(expected).hasMessage("failed to decrypt LTPA2 token");
+	}
+
+	@Test
 	public void makeInstanceTest() throws GeneralSecurityException
 	{
 		Ltpa2Token actual = Ltpa2Utils.makeInstance(getTestToken());
@@ -62,6 +73,26 @@ public class Ltpa2UtilsTest
 		assertThat(actual).isNotNull();
 		assertThat(actual.getExpire()).isEqualToIgnoringNanos(LocalDateTime.of(2018, 2, 19, 13, 31));
 		assertThat(actual.getUser()).isNotEmpty();
+	}
+
+	@Test
+	public void makeInstanceTestWithEmptyExpire()
+	{
+		Ltpa2Token actual = Ltpa2Utils.makeInstance("u:user\\:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar%1519043460000%2YN9in6ulaNSjOUoWyIYp1Sg4cF0BA5vL+Fn3wzNX/32DpokV8aAoJb2KV/6HhO6SbrswL1x5MudYFIxAo50CwymFqkYtvYe0aaYyjKrcPhJCih3acyLasZWUQQRU8iDSz8BAUwmztiY1YDZSRWCOAzZwdLOFTFhNhOoD+uV6nE=");
+
+		assertThat(actual).isNotNull();
+		assertThat(actual.getExpire()).isEqualToIgnoringNanos(LocalDateTime.of(2018, 2, 19, 13, 31));
+		assertThat(actual.getUser()).isNotEmpty();
+	}
+
+	@Test
+	public void makeInstanceTestWithMalformedToken()
+	{
+		InvalidLtpa2TokenException expected = Assertions.assertThrows(InvalidLtpa2TokenException.class, () ->
+		{
+			Ltpa2Utils.makeInstance("u:user\\:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar%1519043460000");
+		});
+		assertThat(expected).hasMessage("token is malformed");
 	}
 
 	@Test
@@ -74,6 +105,26 @@ public class Ltpa2UtilsTest
 	public void isSignatureValidTest() throws GeneralSecurityException
 	{
 		assertThat(Ltpa2Utils.isSignatureValid(getTestToken(), Constants.ENCODED_PUBLIC_KEY)).isTrue();
+	}
+
+	@Test
+	public void isSignatureValidTestWithInvalidPublicKey() throws GeneralSecurityException
+	{
+		InvalidLtpa2TokenException expected = Assertions.assertThrows(InvalidLtpa2TokenException.class, () ->
+		{
+			Ltpa2Utils.isSignatureValid(getTestToken(), "foo");
+		});
+		assertThat(expected).hasMessage("invalid public key");
+	}
+
+	@Test
+	public void isSignatureValidTestWithMalformedToken() throws GeneralSecurityException
+	{
+		InvalidLtpa2TokenException expected = Assertions.assertThrows(InvalidLtpa2TokenException.class, () ->
+		{
+			Ltpa2Utils.isSignatureValid("u:user\\:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar%1519043460000", Constants.ENCODED_PUBLIC_KEY);
+		});
+		assertThat(expected).hasMessage("token is malformed");
 	}
 
 	@Test
@@ -97,5 +148,22 @@ public class Ltpa2UtilsTest
 		String encrypted = Ltpa2Utils.encryptToken(token, privKey, sharedKey);
 
 		assertThat(Ltpa2Utils.isSignatureValid(Ltpa2Utils.decryptLtpa2Token(encrypted, sharedKey), Constants.ENCODED_PUBLIC_KEY)).isTrue();
+	}
+
+	@Test
+	public void encryptTokenTestWithMalformedSharedKey() throws GeneralSecurityException
+	{
+		SecretKey sharedKey = new SecretKeySpec(new byte[]
+		{
+			0
+		}, "AES");
+		PrivateKey privKey = LtpaKeyUtils.decryptPrivateKey(Constants.ENCRYPTED_PRIVATE_KEY, Constants.ENCRYPTION_PASSWORD);
+		Ltpa2Token token = new Ltpa2Token();
+		token.setUser("user:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar");
+		InvalidLtpa2TokenException expected = Assertions.assertThrows(InvalidLtpa2TokenException.class, () ->
+		{
+			Ltpa2Utils.encryptToken(token, privKey, sharedKey);
+		});
+		assertThat(expected).hasMessage("failed to encrypt token");
 	}
 }
