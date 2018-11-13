@@ -139,15 +139,8 @@ public class Ltpa2Utils
 	{
 		Assert.hasText(token, TOKEN_MUST_NOT_BE_EMPTY);
 		
-		try
-		{
-			final Ltpa2Token instance = makeInstance(token);
-			return isTokenExpired(instance);
-		}
-		catch (IllegalArgumentException e)
-		{
-			throw new InvalidLtpa2TokenException(TOKEN_IS_MALFORMED);
-		}
+		final Ltpa2Token instance = makeInstance(token);
+		return isTokenExpired(instance);
 	}
 
 	/**
