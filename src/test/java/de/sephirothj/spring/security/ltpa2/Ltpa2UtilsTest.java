@@ -92,7 +92,7 @@ public class Ltpa2UtilsTest
 		{
 			Ltpa2Utils.makeInstance("u:user\\:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar%1519043460000");
 		});
-		assertThat(expected).hasMessage("token is malformed");
+		assertThat(expected).hasMessageContaining("invalid serialized LTPA2 token");
 	}
 
 	@Test
@@ -124,7 +124,7 @@ public class Ltpa2UtilsTest
 		{
 			Ltpa2Utils.isSignatureValid("u:user\\:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar%1519043460000", Constants.ENCODED_PUBLIC_KEY);
 		});
-		assertThat(expected).hasMessage("token is malformed");
+		assertThat(expected).hasMessageContaining("invalid serialized LTPA2 token");
 	}
 
 	@Test

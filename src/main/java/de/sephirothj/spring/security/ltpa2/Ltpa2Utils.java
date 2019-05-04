@@ -25,7 +25,6 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
-import java.time.LocalDateTime;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -61,11 +60,11 @@ public class Ltpa2Utils
 	 * @throws InvalidLtpa2TokenException in case something went wrong
 	 */
 	@NonNull
-	String decryptLtpa2Token(@NonNull final String encryptedToken, @NonNull final SecretKey key) throws InvalidLtpa2TokenException
+	public String decryptLtpa2Token(@NonNull final String encryptedToken, @NonNull final SecretKey key) throws InvalidLtpa2TokenException
 	{
-		Assert.hasText(encryptedToken, "encryptedToken must not be empty");
+		Assert.hasText(encryptedToken, TOKEN_MUST_NOT_BE_EMPTY);
 		Assert.notNull(key, KEY_MUST_NOT_BE_NULL);
-		
+
 		try
 		{
 			final byte[] rawToken = Base64Utils.decodeFromString(encryptedToken);
@@ -87,16 +86,18 @@ public class Ltpa2Utils
 	 * @param token a serialized LTPA2 token (unencrypted)
 	 * @return Array with length 3. Index 0 = Body, 1 = expires and 2 = base64-encoded signature
 	 * @throws IllegalArgumentException if the token is empty
-	 * @throws IllegalArgumentException if the token is malformed
+	 * @throws InvalidLtpa2TokenException if the token is malformed
 	 */
+	@NonNull
 	private String[] getTokenParts(@NonNull final String token) throws IllegalArgumentException
 	{
 		Assert.hasText(token, TOKEN_MUST_NOT_BE_EMPTY);
-		Assert.hasText(token, "serializedToken must not be empty");
-		
+
 		final String[] tokenParts = token.split("\\%", 3);
-		Assert.notEmpty(tokenParts, "invalid serialized LTPA2 token. token must contain exactly three '%'!");
-		Assert.isTrue(tokenParts.length == 3, "invalid serialized LTPA2 token. token must contain exactly three '%'!");
+		if (tokenParts.length != 3)
+		{
+			throw new InvalidLtpa2TokenException("invalid serialized LTPA2 token. token must contain exactly three '%'!");
+		}
 		return tokenParts;
 	}
 
@@ -108,10 +109,10 @@ public class Ltpa2Utils
 	 * @throws InvalidLtpa2TokenException if the token is malformed
 	 */
 	@NonNull
-	Ltpa2Token makeInstance(@NonNull final String tokenStr) throws InvalidLtpa2TokenException
+	public Ltpa2Token makeInstance(@NonNull final String tokenStr) throws InvalidLtpa2TokenException
 	{
-		Assert.hasText(tokenStr, "tokenStr must not be empty");
-		
+		Assert.hasText(tokenStr, TOKEN_MUST_NOT_BE_EMPTY);
+
 		try
 		{
 			final String[] tokenParts = getTokenParts(tokenStr);
@@ -134,27 +135,14 @@ public class Ltpa2Utils
 	 * @param token a serialized LTPA2 token (unencrypted)
 	 * @return whether the given token is expired or not
 	 * @throws InvalidLtpa2TokenException if the token is malformed
+	 * @see Ltpa2Token#isExpired()
 	 */
-	boolean isTokenExpired(@NonNull final String token) throws InvalidLtpa2TokenException
+	public boolean isTokenExpired(@NonNull final String token) throws InvalidLtpa2TokenException
 	{
 		Assert.hasText(token, TOKEN_MUST_NOT_BE_EMPTY);
-		
-		final Ltpa2Token instance = makeInstance(token);
-		return isTokenExpired(instance);
-	}
 
-	/**
-	 * checks if the given token is expired
-	 *
-	 * @param token a LTPA2 token instance
-	 * @return whether the given token is expired or not
-	 */
-	boolean isTokenExpired(@NonNull final Ltpa2Token token)
-	{
-		Assert.notNull(token, "token must not be null");
-		
-		final LocalDateTime expires = token.getExpire();
-		return expires.isBefore(LocalDateTime.now());
+		final Ltpa2Token instance = makeInstance(token);
+		return instance.isExpired();
 	}
 
 	/**
@@ -173,7 +161,7 @@ public class Ltpa2Utils
 	{
 		Assert.hasText(token, TOKEN_MUST_NOT_BE_EMPTY);
 		Assert.hasText(signerKey, "signerKey must not be empty");
-		
+
 		try
 		{
 			return isSignatureValid(token, LtpaKeyUtils.decodePublicKey(signerKey));
@@ -193,11 +181,11 @@ public class Ltpa2Utils
 	 * @throws InvalidLtpa2TokenException in case an error occured during signature verification
 	 * @throws InvalidLtpa2TokenException if the token is malformed
 	 */
-	boolean isSignatureValid(@NonNull final String token, @NonNull final PublicKey signerKey) throws InvalidLtpa2TokenException
+	public boolean isSignatureValid(@NonNull final String token, @NonNull final PublicKey signerKey) throws InvalidLtpa2TokenException
 	{
 		Assert.hasText(token, TOKEN_MUST_NOT_BE_EMPTY);
-		Assert.notNull(signerKey, "signerKey must not be null");
-		
+		Assert.notNull(signerKey, KEY_MUST_NOT_BE_NULL);
+
 		try
 		{
 			final String[] tokenParts = getTokenParts(token);
@@ -228,11 +216,11 @@ public class Ltpa2Utils
 	 * @see Ltpa2Token#toString()
 	 */
 	@NonNull
-	String signToken(@NonNull final String token, @NonNull final PrivateKey key) throws InvalidLtpa2TokenException
+	public String signToken(@NonNull final String token, @NonNull final PrivateKey key) throws InvalidLtpa2TokenException
 	{
 		Assert.hasText(token, TOKEN_MUST_NOT_BE_EMPTY);
 		Assert.notNull(key, KEY_MUST_NOT_BE_NULL);
-		
+
 		try
 		{
 			final Signature signer = Signature.getInstance(SIGNATURE_ALGORITM);
@@ -264,7 +252,7 @@ public class Ltpa2Utils
 		Assert.notNull(token, "token must not be null");
 		Assert.notNull(signerKey, "signerKey must not be null");
 		Assert.notNull(key, KEY_MUST_NOT_BE_NULL);
-		
+
 		final String serializedToken = token.toString();
 		final String signature = signToken(serializedToken, signerKey);
 		final StringBuilder rawTokenStr = new StringBuilder(serializedToken);

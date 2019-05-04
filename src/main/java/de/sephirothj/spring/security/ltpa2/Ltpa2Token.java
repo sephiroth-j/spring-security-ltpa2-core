@@ -81,6 +81,17 @@ public class Ltpa2Token
 		Assert.hasText(expire, "expire must not be empty");
 		this.expire = LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.valueOf(expire)), ZoneId.systemDefault());
 	}
+	
+
+	/**
+	 * checks if this token is expired
+	 *
+	 * @return whether the token is expired or not
+	 */
+	public boolean isExpired()
+	{
+		return getExpire().isBefore(LocalDateTime.now());
+	}
 
 	/**
 	 * sets the user of the token
