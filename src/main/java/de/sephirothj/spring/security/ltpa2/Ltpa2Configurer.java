@@ -19,6 +19,7 @@ import java.security.PublicKey;
 import javax.crypto.SecretKey;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -71,9 +72,9 @@ public class Ltpa2Configurer extends AbstractHttpConfigurer<Ltpa2Configurer, Htt
 	 * <p>
 	 * the name of header expected to contain the LTPA2 token</p>
 	 * <p>
-	 * default: {@code "Authorization"}</p>
+	 * default: {@value HttpHeaders#AUTHORIZATION}</p>
 	 */
-	private String headerName = "Authorization";
+	private String headerName = HttpHeaders.AUTHORIZATION;
 
 	/**
 	 * <p>

@@ -26,7 +26,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -63,11 +65,11 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	 * <p>
 	 * the name of header expected to contain the LTPA2 token</p>
 	 * <p>
-	 * default: {@code "Authorization"}</p>
+	 * default: {@value HttpHeaders#AUTHORIZATION}</p>
 	 */
 	@Setter
 	@NonNull
-	private String headerName = "Authorization";
+	private String headerName = HttpHeaders.AUTHORIZATION;
 
 	/**
 	 * <p>
@@ -115,7 +117,7 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	}
 
 	@NonNull
-	private String getTokenFromHeader(final String header)
+	private String getTokenFromHeader(@Nullable final String header)
 	{
 		return header != null && header.startsWith(headerValueIdentifier) ? header.substring(header.indexOf(headerValueIdentifier) + headerValueIdentifier.length()) : "";
 	}
@@ -133,7 +135,7 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	 * @return the value of the LTPA2 token or empty string if none was found but never {@code null}
 	 */
 	@NonNull
-	private String getTokenFromRequest(final HttpServletRequest request)
+	private String getTokenFromRequest(@NonNull final HttpServletRequest request)
 	{
 		String ltpaToken = getTokenFromHeader(request.getHeader(headerName));
 		if (ltpaToken.isEmpty())
