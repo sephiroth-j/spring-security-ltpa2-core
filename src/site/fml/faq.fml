@@ -21,16 +21,22 @@ com.ibm.websphere.ltpa.Realm=defaultRealm
 com.ibm.websphere.ltpa.PublicKey=AOECPMDAs0o7MzQIgxZhAXJZ2BaDE3mqRZAbkbQO38CgUIgeAPEA3iWIYp+p/Ai0J4//UOml20an+AuCnDGzcFCaf3S3EAiR4cK59vl/u8TIswPIg2akh4J7qL3E/qRxN9WD945tS3h0YhJZSq7rC22wytLsxbFuKpEuYfm1i5spAQAB
 				</pre>
 				<p>You will need <code>com.ibm.websphere.ltpa.3DESKey</code>, <code>com.ibm.websphere.ltpa.PrivateKey</code> and <code>com.ibm.websphere.ltpa.PublicKey</code>. All of them are encoded while some of them are encrypted prior.</p>
-				<p><code>com.ibm.websphere.ltpa.3DESKey</code> is the encrypted shared key that is used to enctrypt the LTPA2-Token.</p>
+				<p><code>com.ibm.websphere.ltpa.3DESKey</code> is the encrypted shared key that is used to encrypt the LTPA2-Token.</p>
 				<p><code>com.ibm.websphere.ltpa.PrivateKey</code> is your encrypted private key that you will need if want to send an LTPA2-Token.</p>
 				<p><code>com.ibm.websphere.ltpa.PublicKey</code> is the corresponding public key that the receiver of the token you created needs to verify the token signature. That's not what you need, unless you want send tokens to yourself. You need the public key from the service that sends you LTPA2-tokens. Speek with the administrator of that service, he can give it to you.</p>
 				<p><small><a href="https://www.ibm.com/support/knowledgecenter/en/SSEQTP_8.5.5/com.ibm.websphere.wlp.doc/ae/rwlp_config_ltpa.html">Source</a></small></p>
 			</answer>
 		</faq>
 		<faq id="password">
-			<question>And where do I find the password for the shared key?</question>
+			<question>Where do I find the password for the shared key and the private key?</question>
 			<answer>
-				<p>In the attribute <code>keysPassword</code> in your server configuration. If it is xor encoded (which it probably is), you can decode it. There is <a href="http://www.devops-insight.com/2014/08/how-to-decode-websphere-passwords.html">this litte tutorial</a> that will help you to do so. Or <a href="https://strelitzia.net/wasXORdecoder/wasXORdecoder.html">you can use this site</a> which has a JavaScript implementation (check the source of the page). Or <a href="https://lmgtfy.com/?q=decode+Websphere+passwords">just google it</a>!</p>
+				<p>In the attribute <code>keysPassword</code> in your server configuration. If it is xor encoded (which it probably is), you can decode it. There is <a href="http://www.devops-insight.com/2014/08/how-to-decode-websphere-passwords.html">this litte tutorial</a> that will help you to do so. Or <a href="https://strelitzia.net/wasXORdecoder/wasXORdecoder.html">you can use this site</a> which has a JavaScript implementation (<i>check the source of the page</i>). Or <a href="https://lmgtfy.com/?q=decode+Websphere+passwords">just google it!</a></p>
+			</answer>
+		</faq>
+		<faq id="decrypt">
+			<question>How do I decrypt the encrypted keys?</question>
+			<answer>
+				<p><code>com.ibm.websphere.ltpa.3DESKey</code> and <code>com.ibm.websphere.ltpa.PrivateKey</code> are encrypted with the <a href="#password">password</a>. The utility class <code>LtpaKeyUtils</code> provides methods for restoring the keys including decrypting the private key (<code>decryptPrivateKey</code>) and the shared key (<code>decryptSharedKey</code>).</p>
 			</answer>
 		</faq>
 	</part>
