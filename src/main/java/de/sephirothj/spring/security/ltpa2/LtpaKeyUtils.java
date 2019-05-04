@@ -50,6 +50,7 @@ import org.springframework.util.Base64Utils;
 public class LtpaKeyUtils
 {
 	private static final String PASSWORD_MUST_NOT_BE_EMPTY = "password must not be empty";
+	private static final String KEY_ALGORITHM = "RSA";
 
 	/**
 	 * the size of the shared secret key in byte
@@ -147,7 +148,7 @@ public class LtpaKeyUtils
 			final BigInteger modulus = new BigInteger(Arrays.copyOfRange(parts, 0, PUBLIC_MODULUS_LENGTH));
 			final BigInteger exponent = new BigInteger(Arrays.copyOfRange(parts, PUBLIC_MODULUS_LENGTH, PUBLIC_MODULUS_LENGTH + PUBLIC_EXPONENT_LENGTH));
 			final RSAPublicKeySpec pubKeySpec = new RSAPublicKeySpec(modulus, exponent);
-			final KeyFactory kf = KeyFactory.getInstance("RSA");
+			final KeyFactory kf = KeyFactory.getInstance(KEY_ALGORITHM);
 			return kf.generatePublic(pubKeySpec);
 		}
 		catch (NoSuchAlgorithmException | InvalidKeySpecException | IllegalArgumentException ex)
@@ -182,7 +183,7 @@ public class LtpaKeyUtils
 			final BigInteger q = new BigInteger(Arrays.copyOfRange(parts, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + privateExponentLength + PUBLIC_EXPONENT_LENGTH + PRIVATE_P_Q_LENGTH, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH + privateExponentLength + PUBLIC_EXPONENT_LENGTH + PRIVATE_P_Q_LENGTH + PRIVATE_P_Q_LENGTH));
 			final BigInteger modulus = p.multiply(q);
 			final RSAPrivateKeySpec privKeySpec = new RSAPrivateKeySpec(modulus, privateExponent);
-			final KeyFactory kf = KeyFactory.getInstance("RSA");
+			final KeyFactory kf = KeyFactory.getInstance(KEY_ALGORITHM);
 			return kf.generatePrivate(privKeySpec);
 		}
 		catch (InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException | ArrayIndexOutOfBoundsException ex)
