@@ -56,7 +56,7 @@ If we base64-decode it, it will look like this.
 00000130
 --
 
-Not so nice, isn't it? Okay, then let's *decrypt* it! The *encryption algorithm is AES-128-CBC with PKCS5/7 padding* and as such we need link:faq.html[the shared secret key]. Now it is not so binary anymore!
+Not so nice, isn't it? Okay, then let's *decrypt* it! The *encryption algorithm is AES-128-CBC with PKCS5/7 padding* and as such we need link:faq.html#where-to-find[the shared secret key]. Now it is not so binary anymore!
 
 .decrypted token
 [source]
@@ -70,7 +70,7 @@ Let's have closer look at the components of a LTPA token. A token consists of th
 image::./images/token-parts.png["token parts",align="center"]
 
 ==== Expire
-The expire part is the unix timestamp of the last validity date ... *in milliseconds*! I don not know why IBM did that. Maybe they thought seconds would not be precise enough? But that just makes the next point more funnier: *the last three digits are always 000* thus they are back at the precision of seconds!
+The expire part is the unix timestamp of the last validity date ... *in milliseconds*! I do not know why IBM did that. Maybe they thought seconds would not be precise enough? But that just makes the next point more funnier: *the last three digits are always 000* thus they are back at the precision of seconds!
 
 ==== Body
 The body contains the actual token payload. It consists of simple key-value pairs with each pair separated by a dollar sign `$` while key and value are delimited by colon `:`. If a value contains one of those special characters it must be escaped by preceding a backslash `\` (_look at the word "user" in the example above_). So, the body is nothing more than a https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/util/Properties.html#load(java.io.Reader)[Java properties file^] with `:` instead of `=` and `$` instead of a line terminator character (e.g. `\n`).
