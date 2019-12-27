@@ -47,6 +47,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 public final class Ltpa2Filter extends OncePerRequestFilter
 {
+	private static final String EMPTY_STRING = "";
+
 	@Setter
 	@NonNull
 	private UserDetailsService userDetailsService;
@@ -98,7 +100,7 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	private SecretKey sharedKey;
 
 	/**
-	 * allowed expired tokens
+	 * allow expired tokens
 	 * <p>
 	 * <b>Do not use in prodcution mode, only for testing!</b></p>
 	 */
@@ -111,21 +113,25 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 		Assert.notNull(userDetailsService, "A UserDetailsService is required");
 		Assert.hasText(cookieName, "A cookieName is required");
 		Assert.hasText(headerName, "A headerName is required");
-		Assert.notNull(headerValueIdentifier, "A headerValueIdentifier must not be null");
+		Assert.notNull(headerValueIdentifier, "The headerValueIdentifier must not be null");
 		Assert.notNull(signerKey, "A signerKey is required");
 		Assert.notNull(sharedKey, "A sharedKey is required");
+		if (allowExpiredToken)
+		{
+			log.warn("Expired LTPA2 tokens are allowed, this should only be used for testing!");
+		}
 	}
 
 	@NonNull
 	private String getTokenFromHeader(@Nullable final String header)
 	{
-		return header != null && header.startsWith(headerValueIdentifier) ? header.substring(header.indexOf(headerValueIdentifier) + headerValueIdentifier.length()) : "";
+		return header != null && header.startsWith(headerValueIdentifier) ? header.substring(header.indexOf(headerValueIdentifier) + headerValueIdentifier.length()) : EMPTY_STRING;
 	}
 
 	@NonNull
-	private String getTokenFromCookies(final Cookie... cookies)
+	private String getTokenFromCookies(@Nullable final Cookie... cookies)
 	{
-		return cookies != null ? Stream.of(cookies).filter(c -> c.getName().equals(cookieName)).findFirst().map(Cookie::getValue).orElse("") : "";
+		return cookies != null ? Stream.of(cookies).filter(c -> c.getName().equals(cookieName)).findFirst().map(Cookie::getValue).orElse(EMPTY_STRING) : EMPTY_STRING;
 	}
 
 	/**
@@ -167,7 +173,7 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 		catch (AuthenticationException invalidTokenEx)
 		{
 			SecurityContextHolder.clearContext();
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, invalidTokenEx.getLocalizedMessage());
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, invalidTokenEx.getLocalizedMessage());
 			return;
 		}
 
