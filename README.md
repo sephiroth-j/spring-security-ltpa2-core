@@ -22,7 +22,7 @@ curl -i -b "My-Auth-Cookie=<token-value>" http://localhost:8080/hello
 An absolute minimum requirement for configuration are the shared secret key needed for decrypting the token and, in order to verify its signature, the public key from the identity provider that created the token.
 
 ## Usage
-Checkout my [sample project](https://github.com/sephiroth-j/spring-security-ltpa2-sample) for a complete example.
+Checkout the [servlet sample project](https://github.com/sephiroth-j/spring-security-ltpa2-sample) or [reactive sample project](https://github.com/sephiroth-j/spring-security-ltpa2-reactive-sample) for a complete example.
 
 ### pom.xml
 Add the library as an dependency together with your Spring Security dependencies.
@@ -40,7 +40,7 @@ Add the library as an dependency together with your Spring Security dependencies
 	<dependency>
 		<groupId>de.sephiroth-j</groupId>
 		<artifactId>spring-security-ltpa2</artifactId>
-		<version>[0.2.2,)</version>
+		<version>[1.0.0,)</version>
 	</dependency>
 </dependencies>
 
@@ -52,7 +52,7 @@ Add the library as an dependency together with your Spring Security dependencies
 </repositories>
 ```
 
-### Web Security Configuration
+### Security Configuration for Web Servlet
 Add the `Ltpa2Filter` using `Ltpa2Configurer`. It needs a `SecretKey` instance of the shared key that is used for the symmetric encryption of the LTPA2 token. In order to verify the provided token, it also needs the `PublicKey` from the identity provider (for example IBM Secure Gateway / DataPower) that sends the LTPA2 token.
 
 As the user is pre-authenticated, **an instance of `UserDetailsService` is required** to setup the security context and populate it with the granted roles for the authenticated user. In this example we will simply use `InMemoryAuthentication` with a hard-coded list of users and their roles.
@@ -83,6 +83,51 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 	{
 		auth.inMemoryAuthentication()
 			.withUser("user").password("password").roles("USER");
+	}
+}
+```
+
+### Security Configuration for Web Reactive
+Add an `AuthenticationWebFilter` using `Ltpa2AuthManager` and the `Ltpa2AuthConverter`. The `Ltpa2AuthConverter` needs a `SecretKey` instance of the shared key that is used for the symmetric encryption of the LTPA2 token. In order to verify the provided token, it also needs the `PublicKey` from the identity provider (for example IBM Secure Gateway / DataPower) that sends the LTPA2 token.
+
+As the user is pre-authenticated, **an instance of `ReactiveUserDetailsService` is required** to setup the security context and populate it with the granted roles for the authenticated user. In this example we will simply use `MapReactiveUserDetailsService` with a hard-coded list of users and their roles.
+
+```java
+@Configuration
+@EnableWebFluxSecurity
+public class WebSecurityConfig
+{
+
+	@Bean
+	public SecurityWebFilterChain springSecurityFilterChain(final ServerHttpSecurity http, final ReactiveUserDetailsService userDetailsService, AuthenticationWebFilter ltpa2AuthenticationWebFilter)
+	{
+		http
+			.httpBasic().disable()
+			.authorizeExchange()
+			// all other require any authentication
+			.anyExchange().authenticated()
+			.and()
+			// apply ltpa2 authentication filter
+			.addFilterAt(ltpa2AuthenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION);
+		return http.build();
+	}
+
+	@Bean
+	AuthenticationWebFilter x509AuthenticationWebFilter(ReactiveUserDetailsService userDetailsService) throws GeneralSecurityException
+	{
+		final Ltpa2AuthConverter converter = new Ltpa2AuthConverter();
+		converter.setSharedKey(sharedKey());
+		converter.setSignerKey(signerKey());
+
+		final AuthenticationWebFilter webfilter = new AuthenticationWebFilter(new Ltpa2AuthManager(userDetailsService));
+		webfilter.setServerAuthenticationConverter(converter);
+		return webfilter;
+	}
+
+	@Bean
+	public ReactiveUserDetailsService userDetailsService()
+	{
+		return new MapReactiveUserDetailsService(User.withUsername("user").password("password").roles("USER").build());
 	}
 }
 ```

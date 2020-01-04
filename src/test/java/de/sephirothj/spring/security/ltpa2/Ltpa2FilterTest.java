@@ -17,11 +17,12 @@ package de.sephirothj.spring.security.ltpa2;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.PublicKey;
+import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +34,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -42,6 +44,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.util.Base64Utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -54,7 +57,6 @@ import static org.mockito.Mockito.verify;
  */
 public class Ltpa2FilterTest
 {
-	private static final String TEST_TOKEN = "Wl3qcMXdvCZjScDwB18/5VYujKDYsptVWXwNVW2yKuZw6h5Kg4amiGDeQCh2xmtNVPgCkzyk66ZWrdY70+nQEe+gotHjJtrcoW/VnbbQAwrQE5GojqK+1RdjvnwmQ9QULqcYAItw4ggZ2JF3CRR5uZ3NSFgkZpzkcMbfuYSWipNXsqEUHKONUlrg0Oc6lNKqWknx87HoPKmTnkGD5gdecu1FJCKUXSk1tanAjN3RaEWY8woxMIJQEMw/yeOrA9Fe+1nWjGAR5ITgkm+whpXfzl3n3g7kWHaBJf8DUUlKRsww4oCe3+t85b1WqoTC6FZw2qovLwn3ioRm1eIBDPO+KQZD60Ps4f+QEOjFzkLQC2f6BlZKc8KMHhffRQRpBgOD6kYV/wGDRHuvkK5vMAeJtQ==";
 	
 	@Test
 	public void getTokenFromHeaderTestWithDefaultPrefix()
@@ -174,9 +176,9 @@ public class Ltpa2FilterTest
 		Ltpa2Filter uut = new Ltpa2Filter();
 		uut.setSharedKey(LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD));
 
-		AuthenticationException expected = Assertions.assertThrows(AuthenticationException.class, () ->
+		AuthenticationException expected = Assertions.assertThrows(InsufficientAuthenticationException.class, () ->
 		{
-			ReflectionTestUtils.invokeMethod(uut, "validateLtpaTokenAndLoadUser", TEST_TOKEN);
+			ReflectionTestUtils.invokeMethod(uut, "validateLtpaTokenAndLoadUser", Constants.TEST_TOKEN);
 		});
 		assertThat(expected).hasMessage("token expired");
 	}
@@ -193,7 +195,7 @@ public class Ltpa2FilterTest
 		UserDetails mockUser = User.withUsername("test-user").roles("DEVELOPERS").password("dummy password").build();
 		given(mock.loadUserByUsername(anyString())).willReturn(mockUser);
 
-		UserDetails actual = ReflectionTestUtils.invokeMethod(uut, "validateLtpaTokenAndLoadUser", TEST_TOKEN);
+		UserDetails actual = ReflectionTestUtils.invokeMethod(uut, "validateLtpaTokenAndLoadUser", Constants.TEST_TOKEN);
 		assertThat(actual).isEqualTo(mockUser);
 	}
 
@@ -202,16 +204,22 @@ public class Ltpa2FilterTest
 	{
 		Ltpa2Filter uut = new Ltpa2Filter();
 		uut.setAllowExpiredToken(true);
-		uut.setSharedKey(LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD));
-		KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-		KeyPair pair = keyGen.generateKeyPair();
-		uut.setSignerKey(pair.getPublic());
+		final SecretKey decryptSharedKey = LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD);
+		uut.setSharedKey(decryptSharedKey);
+		uut.setSignerKey(LtpaKeyUtils.decodePublicKey(Constants.ENCODED_PUBLIC_KEY));
+		
+		String tokenWithInvalidSignature = "expire:1519043460000$u:user\\:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar%1519043460000%ipDldknyTbaSZluHTW3I/Dhh9veyi+QHoX3s4MPxvvTc09COCGGbOQLxiGoIqdBxDrv55WChFNDD6uUtnt74gNX2KTRQpbwY5zSMbNHkUrh/6X+OOqbvcR3fAmIBkTAyBwkX3u6T2WEoEq9FxOYpvlhqvygoJYrjM6JuQeGhvBB=";
+		final Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+		final IvParameterSpec iv = new IvParameterSpec(decryptSharedKey.getEncoded());
+		c.init(Cipher.ENCRYPT_MODE, decryptSharedKey, iv);
+		final byte[] rawEncryptedToken = c.doFinal(tokenWithInvalidSignature.getBytes(StandardCharsets.UTF_8));
+		String encryptedToken = Base64Utils.encodeToString(rawEncryptedToken);
 
-		AuthenticationException expected = Assertions.assertThrows(AuthenticationException.class, () ->
+		AuthenticationException expected = Assertions.assertThrows(InsufficientAuthenticationException.class, () ->
 		{
-			ReflectionTestUtils.invokeMethod(uut, "validateLtpaTokenAndLoadUser", TEST_TOKEN);
+			ReflectionTestUtils.invokeMethod(uut, "validateLtpaTokenAndLoadUser", encryptedToken);
 		});
-		assertThat(expected).hasMessage("failed to verify token signature");
+		assertThat(expected).hasMessage("token signature invalid");
 	}
 
 	@Test
@@ -246,7 +254,7 @@ public class Ltpa2FilterTest
 	@Test
 	void doFilterInternalShouldSetAuthentication() throws ServletException, IOException, GeneralSecurityException
 	{
-		HttpServletRequest request = MockMvcRequestBuilders.get("/").header(HttpHeaders.AUTHORIZATION, "LtpaToken2 ".concat(TEST_TOKEN)).buildRequest(new MockServletContext());
+		HttpServletRequest request = MockMvcRequestBuilders.get("/").header(HttpHeaders.AUTHORIZATION, "LtpaToken2 ".concat(Constants.TEST_TOKEN)).buildRequest(new MockServletContext());
 		UserDetailsService userDetailsService = Mockito.mock(UserDetailsService.class);
 		UserDetails mockUser = User.withUsername("test-user").roles("DEVELOPERS").password("dummy password").build();
 		given(userDetailsService.loadUserByUsername(anyString())).willReturn(mockUser);
@@ -267,9 +275,9 @@ public class Ltpa2FilterTest
 	}
 
 	@Test
-	void doFilterInternalShouldCause401ForUnknownUsers() throws ServletException, IOException, GeneralSecurityException
+	void doFilterInternalShouldCause403ForUnknownUsers() throws ServletException, IOException, GeneralSecurityException
 	{
-		HttpServletRequest request = MockMvcRequestBuilders.get("/").header(HttpHeaders.AUTHORIZATION, "LtpaToken2 ".concat(TEST_TOKEN)).buildRequest(new MockServletContext());
+		HttpServletRequest request = MockMvcRequestBuilders.get("/").header(HttpHeaders.AUTHORIZATION, "LtpaToken2 ".concat(Constants.TEST_TOKEN)).buildRequest(new MockServletContext());
 		HttpServletResponse response = new MockHttpServletResponse();
 		UserDetailsService userDetailsService = Mockito.mock(UserDetailsService.class);
 		given(userDetailsService.loadUserByUsername(anyString())).willThrow(UsernameNotFoundException.class);
@@ -283,6 +291,6 @@ public class Ltpa2FilterTest
 
 		verify(userDetailsService).loadUserByUsername(anyString());
 		assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
-		assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_UNAUTHORIZED);
+		assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_FORBIDDEN);
 	}
 }
