@@ -3,8 +3,8 @@
 This short example shows how to use the LTPA2 Security Module. This example uses Spring Boot.
 
 === Requirements
-- Spring Security 4.2+
-- Spring Boot 1.5+
+- Spring Security 5.1+
+- Spring Boot 2.1+
 
 === Integration
 ==== pom.xml
@@ -23,7 +23,7 @@ Add it as an dependency together with you Spring Security dependencies.
 		<dependency>
 			<groupId>de.sephiroth-j</groupId>
 			<artifactId>spring-security-ltpa2</artifactId>
-			<version>[0.1.0,)</version>
+			<version>[1.0.0,)</version>
 		</dependency>
 	</dependencies>
 
@@ -35,7 +35,7 @@ Add it as an dependency together with you Spring Security dependencies.
 	</repositories>
 --
 
-==== Web Security Configuration
+==== Security Configuration for Web Servlet
 Add the `Ltpa2Filter` using `Ltpa2Configurer`. It needs a `SecretKey` instance of the shared key that is used for the symmetric encryption and decryption of the LTPA2 token. In order to verify the provided token, it also needs the `PublicKey` from the identity provider (for example IBM Secure Gateway / DataPower) that sends the LTPA2 token.
 
 As the user is pre-authenticated, an instance of `UserDetailsService` is required to setup the security context and populate it with the granted roles for the authenticated user. In this example we will simply use `InMemoryAuthentication` with a hard-coded list of users and their roles.
@@ -107,6 +107,52 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 		manager.setUsernameMapper(new DefaultLdapUsernameToDnMapper("ou=user", "cn"));
 		manager.setGroupSearchBase("ou=groups");
 		return manager;
+	}
+}
+--
+
+==== Security Configuration for Web Reactive
+Add an `AuthenticationWebFilter` using `Ltpa2AuthManager` and the `Ltpa2AuthConverter`. The `Ltpa2AuthConverter` needs a `SecretKey` instance of the shared key that is used for the symmetric encryption of the LTPA2 token. In order to verify the provided token, it also needs the `PublicKey` from the identity provider (for example IBM Secure Gateway / DataPower) that sends the LTPA2 token.
+
+As the user is pre-authenticated, an instance of `ReactiveUserDetailsService` is required to setup the security context and populate it with the granted roles for the authenticated user. In this example we will simply use `MapReactiveUserDetailsService` with a hard-coded list of users and their roles.
+
+[source,java]
+--
+@Configuration
+@EnableWebFluxSecurity
+public class WebSecurityConfig
+{
+
+	@Bean
+	public SecurityWebFilterChain springSecurityFilterChain(final ServerHttpSecurity http, final ReactiveUserDetailsService userDetailsService, AuthenticationWebFilter ltpa2AuthenticationWebFilter)
+	{
+		http
+			.httpBasic().disable()
+			.authorizeExchange()
+			// all other require any authentication
+			.anyExchange().authenticated()
+			.and()
+			// apply ltpa2 authentication filter
+			.addFilterAt(ltpa2AuthenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION);
+		return http.build();
+	}
+
+	@Bean
+	AuthenticationWebFilter x509AuthenticationWebFilter(ReactiveUserDetailsService userDetailsService) throws GeneralSecurityException
+	{
+		final Ltpa2AuthConverter converter = new Ltpa2AuthConverter();
+		converter.setSharedKey(sharedKey());
+		converter.setSignerKey(signerKey());
+
+		final AuthenticationWebFilter webfilter = new AuthenticationWebFilter(new Ltpa2AuthManager(userDetailsService));
+		webfilter.setServerAuthenticationConverter(converter);
+		return webfilter;
+	}
+
+	@Bean
+	public ReactiveUserDetailsService userDetailsService()
+	{
+		return new MapReactiveUserDetailsService(User.withUsername("user").password("password").roles("USER").build());
 	}
 }
 --

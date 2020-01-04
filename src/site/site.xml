@@ -5,7 +5,7 @@
 	<skin>
 		<groupId>org.apache.maven.skins</groupId>
 		<artifactId>maven-fluido-skin</artifactId>
-		<version>1.7</version>
+		<version>1.8</version>
 	</skin>
 	<body>
 		<menu name="Overview">
@@ -16,7 +16,8 @@
 			<item name="Links" href="links.html" />
 		</menu>
 		<menu name="Examples">
-			<item name="Sample Project" href="https://github.com/sephiroth-j/spring-security-ltpa2-sample" />
+			<item name="Project for Web Servlet Stack" href="https://github.com/sephiroth-j/spring-security-ltpa2-sample" />
+			<item name="Project for Web Reactive Stack" href="https://github.com/sephiroth-j/spring-security-ltpa2-reactive-sample" />
 		</menu>
 		<menu ref="reports" />
 	</body>
