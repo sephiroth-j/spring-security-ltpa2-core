@@ -19,10 +19,10 @@ import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import javax.crypto.SecretKey;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  *
@@ -43,11 +43,10 @@ class LtpaKeyUtilsTest
 	@Test
 	void decryptSharedKeyTestWithError()
 	{
-		GeneralSecurityException expected = Assertions.assertThrows(GeneralSecurityException.class, () ->
+		assertThatThrownBy(() ->
 		{
 			LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, "foo");
-		});
-		assertThat(expected).hasMessage("failed to decrypt shared key");
+		}).isInstanceOf(GeneralSecurityException.class).hasMessage("failed to decrypt shared key");
 	}
 
 	@Test
@@ -73,10 +72,9 @@ class LtpaKeyUtilsTest
 	@Test
 	void decryptPrivateKeyTestWithError() throws GeneralSecurityException
 	{
-		GeneralSecurityException expected = Assertions.assertThrows(GeneralSecurityException.class, () ->
+		assertThatThrownBy(() ->
 		{
 			LtpaKeyUtils.decryptPrivateKey(Constants.ENCRYPTED_PRIVATE_KEY, "asdgh");
-		});
-		assertThat(expected).hasMessage("failed to decrypt private key");
+		}).isInstanceOf(GeneralSecurityException.class).hasMessage("failed to decrypt private key");
 	}
 }

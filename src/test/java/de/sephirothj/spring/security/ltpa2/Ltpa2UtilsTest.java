@@ -21,11 +21,11 @@ import java.time.LocalDateTime;
 import java.util.TimeZone;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  *
@@ -58,11 +58,10 @@ class Ltpa2UtilsTest
 	void decryptLtpaToken2TestWithMalformedToken() throws GeneralSecurityException
 	{
 		SecretKey secretKey = LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD);
-		InvalidLtpa2TokenException expected = Assertions.assertThrows(InvalidLtpa2TokenException.class, () ->
+		assertThatThrownBy(() ->
 		{
 			Ltpa2Utils.decryptLtpa2Token("wekrcn kldgj", secretKey);
-		});
-		assertThat(expected).hasMessage("failed to decrypt LTPA2 token");
+		}).isExactlyInstanceOf(InvalidLtpa2TokenException.class).hasMessage("failed to decrypt LTPA2 token");
 	}
 
 	@Test
@@ -88,11 +87,10 @@ class Ltpa2UtilsTest
 	@Test
 	void makeInstanceTestWithMalformedToken()
 	{
-		InvalidLtpa2TokenException expected = Assertions.assertThrows(InvalidLtpa2TokenException.class, () ->
+		assertThatThrownBy(() ->
 		{
 			Ltpa2Utils.makeInstance("u:user\\:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar%1519043460000");
-		});
-		assertThat(expected).hasMessageContaining("invalid serialized LTPA2 token");
+		}).isExactlyInstanceOf(InvalidLtpa2TokenException.class).hasMessageContaining("invalid serialized LTPA2 token");
 	}
 
 	@Test
@@ -111,21 +109,19 @@ class Ltpa2UtilsTest
 	void isSignatureValidTestWithInvalidPublicKey() throws GeneralSecurityException
 	{
 		final String testToken = getTestToken();
-		InvalidLtpa2TokenException expected = Assertions.assertThrows(InvalidLtpa2TokenException.class, () ->
+		assertThatThrownBy(() ->
 		{
 			Ltpa2Utils.isSignatureValid(testToken, "foo");
-		});
-		assertThat(expected).hasMessage("invalid public key");
+		}).isExactlyInstanceOf(InvalidLtpa2TokenException.class).hasMessage("invalid public key");
 	}
 
 	@Test
 	void isSignatureValidTestWithMalformedToken() throws GeneralSecurityException
 	{
-		InvalidLtpa2TokenException expected = Assertions.assertThrows(InvalidLtpa2TokenException.class, () ->
+		assertThatThrownBy(() ->
 		{
 			Ltpa2Utils.isSignatureValid("u:user\\:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar%1519043460000", Constants.ENCODED_PUBLIC_KEY);
-		});
-		assertThat(expected).hasMessageContaining("invalid serialized LTPA2 token");
+		}).isExactlyInstanceOf(InvalidLtpa2TokenException.class).hasMessageContaining("invalid serialized LTPA2 token");
 	}
 
 	@Test
@@ -161,10 +157,9 @@ class Ltpa2UtilsTest
 		PrivateKey privKey = LtpaKeyUtils.decryptPrivateKey(Constants.ENCRYPTED_PRIVATE_KEY, Constants.ENCRYPTION_PASSWORD);
 		Ltpa2Token token = new Ltpa2Token();
 		token.setUser("user:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar");
-		InvalidLtpa2TokenException expected = Assertions.assertThrows(InvalidLtpa2TokenException.class, () ->
+		assertThatThrownBy(() ->
 		{
 			Ltpa2Utils.encryptToken(token, privKey, sharedKey);
-		});
-		assertThat(expected).hasMessage("failed to encrypt token");
+		}).isExactlyInstanceOf(InvalidLtpa2TokenException.class).hasMessage("failed to encrypt token");
 	}
 }
