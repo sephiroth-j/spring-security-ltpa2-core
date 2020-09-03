@@ -26,7 +26,7 @@
 	</licenses>
 	
 	<properties>
-		<project.java.version>1.8</project.java.version>
+		<project.java.version>8</project.java.version>
 		<java.version>${project.java.version}</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -50,12 +50,26 @@
 		</developer>
 	</developers>
 	
+	<profiles>
+		<profile>
+			<activation>
+				<jdk>[11,)</jdk>
+			</activation>
+			<properties>
+				<maven.compiler.release>${project.java.version}</maven.compiler.release>
+			</properties>
+		</profile>
+	</profiles>
+	
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
+				<configuration>
+					<showDeprecation>true</showDeprecation>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
