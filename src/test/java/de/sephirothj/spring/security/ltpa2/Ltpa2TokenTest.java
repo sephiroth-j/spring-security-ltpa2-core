@@ -26,13 +26,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Sephiroth
  */
-public class Ltpa2TokenTest
+class Ltpa2TokenTest
 {
 	@RegisterExtension
 	static TimeZoneExtension tz = new TimeZoneExtension(TimeZone.getTimeZone("Europe/Berlin"));
 	
 	@Test
-	public void testOf()
+	void testOf()
 	{
 		String serializedToken = "expire:1519043460000$attribute:value$u:user\\:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar";
 		Ltpa2Token actual = Ltpa2Token.of(serializedToken);
@@ -43,12 +43,12 @@ public class Ltpa2TokenTest
 	}
 	
 	@Test
-	public void testToString()
+	void testToString()
 	{
 		Ltpa2Token token = new Ltpa2Token();
 		token.withAttribute("attribute", "value");
 		token.setUser("user:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar");
 		token.setExpire(LocalDateTime.of(2018, 2, 21, 21, 49, 29));
-		assertThat(token.toString()).isEqualTo("expire:1519246169000$attribute:value$u:user\\:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar");
+		assertThat(token).hasToString("expire:1519246169000$attribute:value$u:user\\:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar");
 	}
 }

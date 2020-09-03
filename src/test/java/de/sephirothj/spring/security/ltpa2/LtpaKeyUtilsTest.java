@@ -28,10 +28,10 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Sephiroth
  */
-public class LtpaKeyUtilsTest
+class LtpaKeyUtilsTest
 {
 	@Test
-	public void decryptSharedKeyTest() throws GeneralSecurityException
+	void decryptSharedKeyTest() throws GeneralSecurityException
 	{
 		SecretKey actual = LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD);
 
@@ -41,7 +41,7 @@ public class LtpaKeyUtilsTest
 	}
 
 	@Test
-	public void decryptSharedKeyTestWithError()
+	void decryptSharedKeyTestWithError()
 	{
 		GeneralSecurityException expected = Assertions.assertThrows(GeneralSecurityException.class, () ->
 		{
@@ -51,7 +51,7 @@ public class LtpaKeyUtilsTest
 	}
 
 	@Test
-	public void decodePublicKeyTest() throws GeneralSecurityException
+	void decodePublicKeyTest() throws GeneralSecurityException
 	{
 		PublicKey actual = LtpaKeyUtils.decodePublicKey(Constants.ENCODED_PUBLIC_KEY);
 
@@ -61,7 +61,7 @@ public class LtpaKeyUtilsTest
 	}
 
 	@Test
-	public void decryptPrivateKeyTest() throws GeneralSecurityException
+	void decryptPrivateKeyTest() throws GeneralSecurityException
 	{
 		PrivateKey actual = LtpaKeyUtils.decryptPrivateKey(Constants.ENCRYPTED_PRIVATE_KEY, Constants.ENCRYPTION_PASSWORD);
 
@@ -71,7 +71,7 @@ public class LtpaKeyUtilsTest
 	}
 
 	@Test
-	public void decryptPrivateKeyTestWithError() throws GeneralSecurityException
+	void decryptPrivateKeyTestWithError() throws GeneralSecurityException
 	{
 		GeneralSecurityException expected = Assertions.assertThrows(GeneralSecurityException.class, () ->
 		{

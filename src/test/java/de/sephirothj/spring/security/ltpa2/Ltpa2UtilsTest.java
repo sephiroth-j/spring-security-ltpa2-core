@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Sephiroth
  */
-public class Ltpa2UtilsTest
+class Ltpa2UtilsTest
 {
 	@RegisterExtension
 	static TimeZoneExtension tz = new TimeZoneExtension(TimeZone.getTimeZone("Europe/Berlin"));
@@ -43,18 +43,19 @@ public class Ltpa2UtilsTest
 	}
 
 	@Test
-	public void decryptLtpaToken2Test() throws GeneralSecurityException
+	void decryptLtpaToken2Test() throws GeneralSecurityException
 	{
 		String actual = getTestToken();
 
-		assertThat(actual).contains("$");
-		assertThat(actual).matches(".+%\\d+%.+");
-		assertThat(actual).contains("u:");
-		assertThat(actual).isEqualTo("expire:1519043460000$u:user\\:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar%1519043460000%ipDldknyTbaSZluHTW3I/Dhh9veyi+QHoX3s4MPxvvTc09COCGGbOQLxiGoIqdBxDrv55WChFNDD6uUtnt74gNX2KTRQpbwY5zSMbNHkUrh/6X+OOqbvcR3fAmIBkTAyBwkX3u6T2WEoEq9FxOYpvlhqvygoJYrjM6JuQeGhvqA=");
+		assertThat(actual)
+			.contains("$")
+			.matches(".+%\\d+%.+")
+			.contains("u:")
+			.isEqualTo("expire:1519043460000$u:user\\:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar%1519043460000%ipDldknyTbaSZluHTW3I/Dhh9veyi+QHoX3s4MPxvvTc09COCGGbOQLxiGoIqdBxDrv55WChFNDD6uUtnt74gNX2KTRQpbwY5zSMbNHkUrh/6X+OOqbvcR3fAmIBkTAyBwkX3u6T2WEoEq9FxOYpvlhqvygoJYrjM6JuQeGhvqA=");
 	}
 
 	@Test
-	public void decryptLtpaToken2TestWithMalformedToken() throws GeneralSecurityException
+	void decryptLtpaToken2TestWithMalformedToken() throws GeneralSecurityException
 	{
 		SecretKey secretKey = LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD);
 		InvalidLtpa2TokenException expected = Assertions.assertThrows(InvalidLtpa2TokenException.class, () ->
@@ -65,7 +66,7 @@ public class Ltpa2UtilsTest
 	}
 
 	@Test
-	public void makeInstanceTest() throws GeneralSecurityException
+	void makeInstanceTest() throws GeneralSecurityException
 	{
 		Ltpa2Token actual = Ltpa2Utils.makeInstance(getTestToken());
 
@@ -75,7 +76,7 @@ public class Ltpa2UtilsTest
 	}
 
 	@Test
-	public void makeInstanceTestWithEmptyExpire()
+	void makeInstanceTestWithEmptyExpire()
 	{
 		Ltpa2Token actual = Ltpa2Utils.makeInstance("u:user\\:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar%1519043460000%2YN9in6ulaNSjOUoWyIYp1Sg4cF0BA5vL+Fn3wzNX/32DpokV8aAoJb2KV/6HhO6SbrswL1x5MudYFIxAo50CwymFqkYtvYe0aaYyjKrcPhJCih3acyLasZWUQQRU8iDSz8BAUwmztiY1YDZSRWCOAzZwdLOFTFhNhOoD+uV6nE=");
 
@@ -85,7 +86,7 @@ public class Ltpa2UtilsTest
 	}
 
 	@Test
-	public void makeInstanceTestWithMalformedToken()
+	void makeInstanceTestWithMalformedToken()
 	{
 		InvalidLtpa2TokenException expected = Assertions.assertThrows(InvalidLtpa2TokenException.class, () ->
 		{
@@ -95,29 +96,30 @@ public class Ltpa2UtilsTest
 	}
 
 	@Test
-	public void isTokenExpiredTest() throws GeneralSecurityException
+	void isTokenExpiredTest() throws GeneralSecurityException
 	{
 		assertThat(Ltpa2Utils.isTokenExpired(getTestToken())).isTrue();
 	}
 
 	@Test
-	public void isSignatureValidTest() throws GeneralSecurityException
+	void isSignatureValidTest() throws GeneralSecurityException
 	{
 		assertThat(Ltpa2Utils.isSignatureValid(getTestToken(), Constants.ENCODED_PUBLIC_KEY)).isTrue();
 	}
 
 	@Test
-	public void isSignatureValidTestWithInvalidPublicKey() throws GeneralSecurityException
+	void isSignatureValidTestWithInvalidPublicKey() throws GeneralSecurityException
 	{
+		final String testToken = getTestToken();
 		InvalidLtpa2TokenException expected = Assertions.assertThrows(InvalidLtpa2TokenException.class, () ->
 		{
-			Ltpa2Utils.isSignatureValid(getTestToken(), "foo");
+			Ltpa2Utils.isSignatureValid(testToken, "foo");
 		});
 		assertThat(expected).hasMessage("invalid public key");
 	}
 
 	@Test
-	public void isSignatureValidTestWithMalformedToken() throws GeneralSecurityException
+	void isSignatureValidTestWithMalformedToken() throws GeneralSecurityException
 	{
 		InvalidLtpa2TokenException expected = Assertions.assertThrows(InvalidLtpa2TokenException.class, () ->
 		{
@@ -127,7 +129,7 @@ public class Ltpa2UtilsTest
 	}
 
 	@Test
-	public void signTokenTest() throws GeneralSecurityException
+	void signTokenTest() throws GeneralSecurityException
 	{
 		PrivateKey privKey = LtpaKeyUtils.decryptPrivateKey(Constants.ENCRYPTED_PRIVATE_KEY, Constants.ENCRYPTION_PASSWORD);
 		String sig = Ltpa2Utils.signToken("expire:1519043460000$u:user\\:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar", privKey);
@@ -136,7 +138,7 @@ public class Ltpa2UtilsTest
 	}
 
 	@Test
-	public void encryptTokenTest() throws GeneralSecurityException
+	void encryptTokenTest() throws GeneralSecurityException
 	{
 		SecretKey sharedKey = LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD);
 		PrivateKey privKey = LtpaKeyUtils.decryptPrivateKey(Constants.ENCRYPTED_PRIVATE_KEY, Constants.ENCRYPTION_PASSWORD);
@@ -150,7 +152,7 @@ public class Ltpa2UtilsTest
 	}
 
 	@Test
-	public void encryptTokenTestWithMalformedSharedKey() throws GeneralSecurityException
+	void encryptTokenTestWithMalformedSharedKey() throws GeneralSecurityException
 	{
 		SecretKey sharedKey = new SecretKeySpec(new byte[]
 		{

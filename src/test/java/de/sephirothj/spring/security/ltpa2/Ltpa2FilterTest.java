@@ -55,11 +55,11 @@ import static org.mockito.Mockito.verify;
  *
  * @author Sephiroth
  */
-public class Ltpa2FilterTest
+class Ltpa2FilterTest
 {
 	
 	@Test
-	public void getTokenFromHeaderTestWithDefaultPrefix()
+	void getTokenFromHeaderTestWithDefaultPrefix()
 	{
 		Ltpa2Filter uut = new Ltpa2Filter();
 		String expected = "the-token";
@@ -70,7 +70,7 @@ public class Ltpa2FilterTest
 	}
 
 	@Test
-	public void getTokenFromHeaderTestWithCustomPrefix()
+	void getTokenFromHeaderTestWithCustomPrefix()
 	{
 		Ltpa2Filter uut = new Ltpa2Filter();
 		String prefix = "my-prefix";
@@ -83,7 +83,7 @@ public class Ltpa2FilterTest
 	}
 
 	@Test
-	public void getTokenFromHeaderTestWithEmptyPrefix()
+	void getTokenFromHeaderTestWithEmptyPrefix()
 	{
 		Ltpa2Filter uut = new Ltpa2Filter();
 		uut.setHeaderValueIdentifier("");
@@ -99,7 +99,7 @@ public class Ltpa2FilterTest
 	}
 
 	@Test
-	public void getTokenFromCookiesTestWithDefaultCookiename() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	void getTokenFromCookiesTestWithDefaultCookiename() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
 		Ltpa2Filter uut = new Ltpa2Filter();
 		String expected = "the-token";
@@ -119,7 +119,7 @@ public class Ltpa2FilterTest
 	}
 
 	@Test
-	public void getTokenFromCookiesTestWithCustomCookiename() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	void getTokenFromCookiesTestWithCustomCookiename() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
 		Ltpa2Filter uut = new Ltpa2Filter();
 		String name = "my-cookie";
@@ -141,7 +141,7 @@ public class Ltpa2FilterTest
 	}
 
 	@Test
-	public void getTokenFromRequestTestWithHeaderOnly()
+	void getTokenFromRequestTestWithHeaderOnly()
 	{
 		Ltpa2Filter uut = new Ltpa2Filter();
 		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
@@ -154,7 +154,7 @@ public class Ltpa2FilterTest
 	}
 
 	@Test
-	public void getTokenFromRequestTestWithCookieOnly()
+	void getTokenFromRequestTestWithCookieOnly()
 	{
 		Ltpa2Filter uut = new Ltpa2Filter();
 		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
@@ -171,7 +171,7 @@ public class Ltpa2FilterTest
 	}
 
 	@Test
-	public void validateLtpaTokenAndLoadUserShouldRejectExpiredTokens() throws GeneralSecurityException
+	void validateLtpaTokenAndLoadUserShouldRejectExpiredTokens() throws GeneralSecurityException
 	{
 		Ltpa2Filter uut = new Ltpa2Filter();
 		uut.setSharedKey(LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD));
@@ -184,7 +184,7 @@ public class Ltpa2FilterTest
 	}
 
 	@Test
-	public void validateLtpaTokenAndLoadUserShouldAllowExpiredTokens() throws GeneralSecurityException
+	void validateLtpaTokenAndLoadUserShouldAllowExpiredTokens() throws GeneralSecurityException
 	{
 		Ltpa2Filter uut = new Ltpa2Filter();
 		uut.setAllowExpiredToken(true);
@@ -200,7 +200,7 @@ public class Ltpa2FilterTest
 	}
 
 	@Test
-	public void validateLtpaTokenAndLoadUserShouldRejectInvalidSignatures() throws GeneralSecurityException
+	void validateLtpaTokenAndLoadUserShouldRejectInvalidSignatures() throws GeneralSecurityException
 	{
 		Ltpa2Filter uut = new Ltpa2Filter();
 		uut.setAllowExpiredToken(true);

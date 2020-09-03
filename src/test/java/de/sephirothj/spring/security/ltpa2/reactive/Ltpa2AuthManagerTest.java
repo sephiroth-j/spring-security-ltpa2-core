@@ -41,7 +41,7 @@ import static org.mockito.BDDMockito.given;
  *
  * @author Sephiroth
  */
-public class Ltpa2AuthManagerTest
+class Ltpa2AuthManagerTest
 {
 	private static Ltpa2Token getTestToken() throws GeneralSecurityException
 	{
