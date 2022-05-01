@@ -15,7 +15,7 @@
 	</issueManagement>
 	<ciManagement>
 		<system>Travis</system>
-		<url>https://travis-ci.com/sephiroth-j/spring-security-ltpa2-core</url>
+		<url>https://app.travis-ci.com/github/sephiroth-j/spring-security-ltpa2-core</url>
 	</ciManagement>
 	<licenses>
 		<license>
