@@ -47,7 +47,7 @@ Add the library as an dependency together with your Spring Security dependencies
 <repositories>
 	<repository>
 		<id>mrepo.sephiroth-j.de</id>
-		<url>http://mrepo.sephiroth-j.de/</url>
+		<url>https://mrepo.sephiroth-j.de/</url>
 	</repository>
 </repositories>
 ```
@@ -133,6 +133,6 @@ public class WebSecurityConfig
 ```
 
 ## Project info and Javadoc
-[Maven Site](http://www.sephiroth-j.de/java/spring-security-ltpa2/)
+[Maven Site](https://www.sephiroth-j.de/java/spring-security-ltpa2/)
 
-[Javadoc](http://www.sephiroth-j.de/java/spring-security-ltpa2/apidocs/)
+[Javadoc](https://www.sephiroth-j.de/java/spring-security-ltpa2/apidocs/)

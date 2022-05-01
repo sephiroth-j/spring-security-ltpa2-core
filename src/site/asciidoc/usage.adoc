@@ -30,7 +30,7 @@ Add it as an dependency together with you Spring Security dependencies.
 	<repositories>
 		<repository>
 			<id>mrepo.sephiroth-j.de</id>
-			<url>http://mrepo.sephiroth-j.de/</url>
+			<url>https://mrepo.sephiroth-j.de/</url>
 		</repository>
 	</repositories>
 --
