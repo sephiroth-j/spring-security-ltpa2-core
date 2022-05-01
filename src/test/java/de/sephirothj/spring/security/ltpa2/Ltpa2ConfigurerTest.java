@@ -36,7 +36,7 @@ class Ltpa2ConfigurerTest
 	void testConfigure() throws Exception
 	{
 		HttpSecurity httpSecurity = mock(HttpSecurity.class);
-		given(httpSecurity.getSharedObject(eq(UserDetailsService.class))).will((invocation) -> mock(invocation.getArgument(0)));
+		given(httpSecurity.getSharedObject(UserDetailsService.class)).will(invocation -> mock(invocation.getArgument(0)));
 		
 		new Ltpa2Configurer()
 			.headerName("header")
