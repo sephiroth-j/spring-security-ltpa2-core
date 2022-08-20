@@ -35,9 +35,10 @@
 		<maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
 		<lombok.version>[1.18.12,)</lombok.version>
 		<spring.security.version>[5.1.0.RELEASE,)</spring.security.version>
-		<junit.jupiter.version>5.8.2</junit.jupiter.version>
+		<junit.jupiter.version>5.9.0</junit.jupiter.version>
 		<reactor.version>[3.2.0.RELEASE,)</reactor.version>
 		<jacoco.version>0.8.8</jacoco.version>
+		<wagon.version>3.5.2</wagon.version>
 	</properties>
 	
 	<developers>
@@ -74,7 +75,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0-M6</version>
+				<version>3.0.0-M7</version>
 				<configuration>
 					<trimStackTrace>false</trimStackTrace>
 				</configuration>
@@ -109,7 +110,7 @@
 							<doCheck>false</doCheck>
 							<doUpdate>false</doUpdate>
 							<getRevisionOnlyOnce>false</getRevisionOnlyOnce>
-							<timestampFormat>{0,date,yyyy-MM-dd HH:mm:ss}</timestampFormat>
+							<timestampFormat>yyyy-MM-dd'T'HH:mm:ss.SSSZ</timestampFormat>
 						</configuration>
 					</execution>
 				</executions>
@@ -127,7 +128,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>3.0.0-M5</version>
+				<version>3.0.0-M6</version>
 				<configuration>
 					<pushChanges>false</pushChanges>
 					<localCheckout>true</localCheckout>
@@ -142,12 +143,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
-				<version>3.0.0-M2</version>
+				<version>3.0.0</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
-				<version>3.12.0</version>
+				<version>4.0.0-M3</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.asciidoctor</groupId>
@@ -180,12 +181,12 @@
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ftp</artifactId>
-				<version>3.5.1</version>
+				<version>${wagon.version}</version>
 			</extension>
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-webdav-jackrabbit</artifactId>
-				<version>3.5.1</version>
+				<version>${wagon.version}</version>
 			</extension>
 		</extensions>
 	</build>
@@ -195,7 +196,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>3.2.2</version>
+				<version>3.4.0</version>
 				<reportSets>
 					<reportSet>
 						<reports>
