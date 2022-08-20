@@ -3,6 +3,8 @@
 ## Unreleased
 ### ⚠ Breaking
 ### ⭐ New Features
+- Allow to change the default behaviour when an authentication failure occurs (Web Servlet only) (fixes [#3](https://github.com/sephiroth-j/spring-security-ltpa2-core/issues/3))
+
 ### 🐞 Bugs Fixed
 
 ##  v1.0.0 - 2020-01-05

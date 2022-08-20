@@ -20,6 +20,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.PublicKey;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
@@ -292,5 +294,33 @@ class Ltpa2FilterTest
 		verify(userDetailsService).loadUserByUsername(anyString());
 		assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
 		assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_FORBIDDEN);
+	}
+
+	@Test
+	void doFilterInternalShouldCause401ForUnknownUsersWithCustomFailureHandler() throws ServletException, IOException, GeneralSecurityException, InterruptedException
+	{
+		HttpServletRequest request = MockMvcRequestBuilders.get("/").header(HttpHeaders.AUTHORIZATION, "LtpaToken2 ".concat(Constants.TEST_TOKEN)).buildRequest(new MockServletContext());
+		HttpServletResponse response = new MockHttpServletResponse();
+		UserDetailsService userDetailsService = Mockito.mock(UserDetailsService.class);
+		given(userDetailsService.loadUserByUsername(anyString())).willThrow(UsernameNotFoundException.class);
+		Ltpa2Filter uut = new Ltpa2Filter();
+		uut.setAllowExpiredToken(true);
+		uut.setUserDetailsService(userDetailsService);
+		uut.setSharedKey(LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD));
+		uut.setSignerKey(LtpaKeyUtils.decodePublicKey(Constants.ENCODED_PUBLIC_KEY));
+		CountDownLatch authFailureHandlerInvocations = new CountDownLatch(1);
+		uut.setAuthFailureHandler((req, res, ex) ->
+		{
+			authFailureHandlerInvocations.countDown();
+			assertThat(ex).hasCauseInstanceOf(UsernameNotFoundException.class);
+			res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+		});
+
+		uut.doFilter(request, response, new MockFilterChain());
+
+		verify(userDetailsService).loadUserByUsername(anyString());
+		assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
+		authFailureHandlerInvocations.await(1, TimeUnit.SECONDS);
+		assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_UNAUTHORIZED);
 	}
 }
