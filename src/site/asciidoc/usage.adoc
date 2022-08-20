@@ -138,7 +138,7 @@ public class WebSecurityConfig
 	}
 
 	@Bean
-	AuthenticationWebFilter x509AuthenticationWebFilter(ReactiveUserDetailsService userDetailsService) throws GeneralSecurityException
+	AuthenticationWebFilter ltpa2AuthenticationWebFilter(ReactiveUserDetailsService userDetailsService) throws GeneralSecurityException
 	{
 		final Ltpa2AuthConverter converter = new Ltpa2AuthConverter();
 		converter.setSharedKey(sharedKey());
