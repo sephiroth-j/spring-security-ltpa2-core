@@ -16,6 +16,7 @@
 package de.sephirothj.spring.security.ltpa2;
 
 import java.security.PublicKey;
+import java.util.Optional;
 import javax.crypto.SecretKey;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -126,7 +127,9 @@ public class Ltpa2Configurer extends AbstractHttpConfigurer<Ltpa2Configurer, Htt
 	@Override
 	public void configure(HttpSecurity builder) throws Exception
 	{
-		UserDetailsService userDetailsService = builder.getSharedObject(UserDetailsService.class);
+		UserDetailsService userDetailsService = Optional.ofNullable(builder.getSharedObject(ApplicationContext.class))
+			.map(ctx -> ctx.getBean(UserDetailsService.class))
+			.orElseThrow(() -> new IllegalStateException("A UserDetailsService must be known in this context"));
 		Ltpa2Filter ltpaFilter = new Ltpa2Filter();
 		ltpaFilter.setUserDetailsService(userDetailsService);
 		ltpaFilter.setCookieName(cookieName);

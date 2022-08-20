@@ -4,6 +4,7 @@
 ### ⚠ Breaking
 ### ⭐ New Features
 - Allow to change the default behaviour when an authentication failure occurs (Web Servlet only) (fixes [#3](https://github.com/sephiroth-j/spring-security-ltpa2-core/issues/3))
+- `Ltpa2Configurer` will now also find its `UserDetailsService` if it was provided as a bean
 
 ### 🐞 Bugs Fixed
 
