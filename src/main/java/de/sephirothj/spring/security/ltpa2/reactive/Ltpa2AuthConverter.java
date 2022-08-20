@@ -128,7 +128,7 @@ public class Ltpa2AuthConverter implements ServerAuthenticationConverter, Initia
 		catch (AuthenticationException e)
 		{
 			// do not produce mono error, just log and produce empty mono as by contract of ServerAuthenticationConverter
-			log.warn(e.getLocalizedMessage());
+			log.warn(e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -148,7 +148,7 @@ public class Ltpa2AuthConverter implements ServerAuthenticationConverter, Initia
 		catch (AuthenticationException e)
 		{
 			// do not produce mono error, just log and produce empty mono as by contract of ServerAuthenticationConverter
-			log.warn(e.getLocalizedMessage());
+			log.warn(e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -171,7 +171,7 @@ public class Ltpa2AuthConverter implements ServerAuthenticationConverter, Initia
 			.map(encryptedToken -> Ltpa2Utils.decryptLtpa2Token(encryptedToken, sharedKey))
 			.onErrorResume(e ->
 			{
-				log.warn(e.getLocalizedMessage());
+				log.warn(e.getLocalizedMessage(), e);
 				return Mono.empty();
 			})
 			.handle(this::checkForExpiredToken)

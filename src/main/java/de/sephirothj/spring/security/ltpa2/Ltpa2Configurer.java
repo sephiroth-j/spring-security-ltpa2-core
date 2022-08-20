@@ -19,11 +19,14 @@ import java.security.PublicKey;
 import javax.crypto.SecretKey;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.util.Assert;
 
@@ -111,6 +114,15 @@ public class Ltpa2Configurer extends AbstractHttpConfigurer<Ltpa2Configurer, Htt
 	@Setter
 	private boolean allowExpiredToken = false;
 
+	/**
+	 * allows to change the default behaviour when an authentication failure occurs.
+	 * <p>
+	 * The default is to respond with 403 status code</p>
+	 */
+	@Setter
+	@Nullable
+	private AuthenticationFailureHandler authFailureHandler;
+
 	@Override
 	public void configure(HttpSecurity builder) throws Exception
 	{
@@ -123,6 +135,9 @@ public class Ltpa2Configurer extends AbstractHttpConfigurer<Ltpa2Configurer, Htt
 		ltpaFilter.setSharedKey(sharedKey);
 		ltpaFilter.setSignerKey(signerKey);
 		ltpaFilter.setAllowExpiredToken(allowExpiredToken);
+		if (authFailureHandler != null) {
+			ltpaFilter.setAuthFailureHandler(authFailureHandler);
+		}
 		ltpaFilter.afterPropertiesSet();
 		builder.addFilterAt(ltpaFilter, AbstractPreAuthenticatedProcessingFilter.class);
 	}

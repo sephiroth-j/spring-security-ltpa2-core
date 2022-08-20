@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
@@ -35,6 +36,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.util.Assert;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -107,6 +110,15 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	@Setter
 	private boolean allowExpiredToken = false;
 
+	/**
+	 * allows to change the default behaviour when an authentication failure occurs.
+	 * <p>
+	 * The default is to respond with 403 status code</p>
+	 */
+	@Setter
+	@NonNull
+	private AuthenticationFailureHandler authFailureHandler = (request, response, exception) -> response.sendError(HttpStatus.FORBIDDEN.value(), exception.getLocalizedMessage());
+
 	@Override
 	public void afterPropertiesSet()
 	{
@@ -116,6 +128,7 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 		Assert.notNull(headerValueIdentifier, "The headerValueIdentifier must not be null");
 		Assert.notNull(signerKey, "A signerKey is required");
 		Assert.notNull(sharedKey, "A sharedKey is required");
+		Assert.notNull(authFailureHandler, "An authFailureHandler is required");
 		if (allowExpiredToken)
 		{
 			log.warn("Expired LTPA2 tokens are allowed, this should only be used for testing!");
@@ -173,7 +186,7 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 		catch (AuthenticationException invalidTokenEx)
 		{
 			SecurityContextHolder.clearContext();
-			response.sendError(HttpServletResponse.SC_FORBIDDEN, invalidTokenEx.getLocalizedMessage());
+			authFailureHandler.onAuthenticationFailure(request, response, invalidTokenEx);
 			return;
 		}
 
@@ -186,8 +199,8 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	 * @param encryptedToken the encrpyted token that sould be verified
 	 * @return a user record but never {@code null}
 	 * @throws AuthenticationException if the token was malformed
-	 * @throws AuthenticationException if the token is expired
-	 * @throws AuthenticationException if the token signature is invalid
+	 * @throws InsufficientAuthenticationException if the token is expired
+	 * @throws InsufficientAuthenticationException if the token signature is invalid
 	 * @throws AuthenticationException if the user was not found or has not granted authorities
 	 */
 	@NonNull
@@ -211,8 +224,8 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 		}
 		catch (AuthenticationException ex)
 		{
-			log.debug("User not found or token is malformed", ex);
-			throw new InsufficientAuthenticationException("token invalid");
+			log.debug(ex instanceof UsernameNotFoundException ? "User not found" : "token is malformed", ex);
+			throw new InsufficientAuthenticationException("token invalid", ex);
 		}
 	}
 }

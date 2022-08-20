@@ -15,12 +15,19 @@
  */
 package de.sephirothj.spring.security.ltpa2;
 
+import java.security.PublicKey;
+import javax.crypto.SecretKey;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
+import org.mockito.ArgumentCaptor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -37,15 +44,57 @@ class Ltpa2ConfigurerTest
 	{
 		HttpSecurity httpSecurity = mock(HttpSecurity.class);
 		given(httpSecurity.getSharedObject(UserDetailsService.class)).will(invocation -> mock(invocation.getArgument(0)));
+		final String headerName = "header";
+		final String cookieName = "cookie";
+		final SecretKey sharedKey = LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD);
+		final PublicKey publicKey = LtpaKeyUtils.decodePublicKey(Constants.ENCODED_PUBLIC_KEY);
 		
 		new Ltpa2Configurer()
-			.headerName("header")
-			.cookieName("cookie")
+			.headerName(headerName)
+			.cookieName(cookieName)
 			.allowExpiredToken(true)
-			.sharedKey(LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD))
-			.signerKey(LtpaKeyUtils.decodePublicKey(Constants.ENCODED_PUBLIC_KEY))
+			.sharedKey(sharedKey)
+			.signerKey(publicKey)
 			.configure(httpSecurity);
 		
-		verify(httpSecurity).addFilterAt(ArgumentMatchers.isA(Ltpa2Filter.class), eq(AbstractPreAuthenticatedProcessingFilter.class));
+		ArgumentCaptor<Ltpa2Filter> configuredFilter = ArgumentCaptor.forClass(Ltpa2Filter.class);
+		verify(httpSecurity).addFilterAt(configuredFilter.capture(), eq(AbstractPreAuthenticatedProcessingFilter.class));
+		assertThat(configuredFilter.getValue())
+			.hasFieldOrPropertyWithValue("headerName", headerName)
+			.hasFieldOrPropertyWithValue("headerValueIdentifier", "LtpaToken2 ")
+			.hasFieldOrPropertyWithValue("cookieName", cookieName)
+			.hasFieldOrPropertyWithValue("allowExpiredToken", true)
+			.hasFieldOrPropertyWithValue("sharedKey", sharedKey)
+			.hasFieldOrPropertyWithValue("signerKey", publicKey)
+			.extracting("authFailureHandler").isNotNull()
+			;
+	}
+
+	@Test
+	void testConfigureWithAuthFaulureHandler() throws Exception
+	{
+		HttpSecurity httpSecurity = mock(HttpSecurity.class);
+		given(httpSecurity.getSharedObject(UserDetailsService.class)).will(invocation -> mock(invocation.getArgument(0)));
+		final SecretKey sharedKey = LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD);
+		final PublicKey publicKey = LtpaKeyUtils.decodePublicKey(Constants.ENCODED_PUBLIC_KEY);
+		final AuthenticationFailureHandler failureHandler = new AuthenticationEntryPointFailureHandler(new Http403ForbiddenEntryPoint());
+		
+		new Ltpa2Configurer()
+			.sharedKey(sharedKey)
+			.signerKey(publicKey)
+			.authFailureHandler(failureHandler)
+			.configure(httpSecurity);
+		
+		ArgumentCaptor<Ltpa2Filter> configuredFilter = ArgumentCaptor.forClass(Ltpa2Filter.class);
+		verify(httpSecurity).addFilterAt(configuredFilter.capture(), eq(AbstractPreAuthenticatedProcessingFilter.class));
+		assertThat(configuredFilter.getValue())
+			.hasFieldOrPropertyWithValue("headerName", "Authorization")
+			.hasFieldOrPropertyWithValue("headerValueIdentifier", "LtpaToken2 ")
+			.hasFieldOrPropertyWithValue("cookieName", "LtpaToken2")
+			.hasFieldOrPropertyWithValue("allowExpiredToken", false)
+			.hasFieldOrPropertyWithValue("sharedKey", sharedKey)
+			.hasFieldOrPropertyWithValue("signerKey", publicKey)
+			.hasFieldOrPropertyWithValue("authFailureHandler", failureHandler)
+			;
 	}
 }
