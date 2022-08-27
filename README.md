@@ -136,3 +136,6 @@ public class WebSecurityConfig
 [Maven Site](https://www.sephiroth-j.de/java/spring-security-ltpa2/)
 
 [Javadoc](https://www.sephiroth-j.de/java/spring-security-ltpa2/apidocs/)
+
+## Changes
+Please refer to [CHANGELOG.md](CHANGELOG.md) for a list of changes.
