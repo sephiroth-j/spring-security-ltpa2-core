@@ -12,6 +12,7 @@
 - `Ltpa2Configurer` will now also find its `UserDetailsService` if it was provided as a bean
 
 ### 🐞 Bugs Fixed
+- do not expose reason of the `AuthenticationException` as response message when authentication failed (Web Servlet only)
 
 ##  v1.0.0 - 2020-01-05
 ### ⚠ Breaking

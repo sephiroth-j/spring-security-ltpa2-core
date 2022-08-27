@@ -117,7 +117,7 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	 */
 	@Setter
 	@NonNull
-	private AuthenticationFailureHandler authFailureHandler = (request, response, exception) -> response.sendError(HttpStatus.FORBIDDEN.value(), exception.getLocalizedMessage());
+	private AuthenticationFailureHandler authFailureHandler = (request, response, exception) -> response.sendError(HttpStatus.FORBIDDEN.value(), "Access Denied");
 
 	@Override
 	public void afterPropertiesSet()
