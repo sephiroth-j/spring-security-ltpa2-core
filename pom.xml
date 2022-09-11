@@ -19,7 +19,7 @@
 	</ciManagement>
 	<licenses>
 		<license>
-            <name>Apache-2.0</name>
+			<name>Apache-2.0</name>
 			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
 			<distribution>repo</distribution>
 		</license>
@@ -39,6 +39,7 @@
 		<reactor.version>[3.2.0.RELEASE,3.99.99)</reactor.version>
 		<jacoco.version>0.8.8</jacoco.version>
 		<wagon.version>3.5.2</wagon.version>
+		<javadoc.version>3.4.1</javadoc.version>
 	</properties>
 	
 	<developers>
@@ -59,6 +60,53 @@
 			<properties>
 				<maven.compiler.release>${project.java.version}</maven.compiler.release>
 			</properties>
+		</profile>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>${javadoc.version}</version>
+						<executions>
+							<execution>
+                                <id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>3.2.1</version>
+						<executions>
+							<execution>
+                                <id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>3.0.1</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 	
@@ -123,7 +171,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.4.1</version>
+				<version>${javadoc.version}</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -133,6 +181,7 @@
 					<pushChanges>false</pushChanges>
 					<localCheckout>true</localCheckout>
 					<tagNameFormat>v@{project.version}</tagNameFormat>
+					<releaseProfiles>release</releaseProfiles>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -218,7 +267,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.4.1</version>
+				<version>${javadoc.version}</version>
 				<reportSets>
 					<reportSet>
 						<reports>
