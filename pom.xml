@@ -33,10 +33,10 @@
 		<maven.compiler.source>${project.java.version}</maven.compiler.source>
 		<maven.compiler.target>${project.java.version}</maven.compiler.target>
 		<maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
-		<lombok.version>[1.18.12,)</lombok.version>
-		<spring.security.version>[5.1.0.RELEASE,6.0.0)</spring.security.version>
-		<junit.jupiter.version>5.9.0</junit.jupiter.version>
-		<reactor.version>[3.2.0.RELEASE,)</reactor.version>
+		<lombok.version>[1.18.24,1.99.99)</lombok.version>
+		<spring.security.version>[5.1.0.RELEASE,5.99.99)</spring.security.version>
+		<junit.jupiter.version>[5.9.0,5.99.99)</junit.jupiter.version>
+		<reactor.version>[3.2.0.RELEASE,3.99.99)</reactor.version>
 		<jacoco.version>0.8.8</jacoco.version>
 		<wagon.version>3.5.2</wagon.version>
 	</properties>
@@ -123,7 +123,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -196,7 +196,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1</version>
 				<reportSets>
 					<reportSet>
 						<reports>
@@ -218,7 +218,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1</version>
 				<reportSets>
 					<reportSet>
 						<reports>
@@ -267,7 +267,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>[4.0.1,)</version>
+			<version>[4.0.1,4.99.99)</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -308,7 +308,7 @@
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
-			<version>[3.17.0,)</version>
+			<version>[3.17.0,3.99.99)</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -320,7 +320,7 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>[3.2.4,)</version>
+			<version>[4.7.0,4.99.99)</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
