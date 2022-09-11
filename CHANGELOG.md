@@ -5,6 +5,13 @@
 ### ⭐ New Features
 ### 🐞 Bugs Fixed
 
+## v1.1.1 - 2022-09-11
+### ⚠ Breaking
+### ⭐ New Features
+### 🐞 Bugs Fixed
+- fixed maven warning
+> The POM for de.sephiroth-j:spring-security-ltpa2:jar:1.1.0 is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+
 ## v1.1.0 - 2022-09-11
 ### ⚠ Breaking
 ### ⭐ New Features
