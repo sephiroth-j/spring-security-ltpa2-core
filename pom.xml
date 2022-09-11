@@ -335,11 +335,11 @@
 	<distributionManagement>
 		<repository>
 			<id>mrepo.sephiroth-j.de</id>
-			<url>davs://sephiroth-j.mywebdav.de/mrepo/</url>
+			<url>${project.distributionManagement.repository.url}</url>
 		</repository>
 		<site>
 			<id>www.sephiroth-j.de/java/</id>
-			<url>ftps://sephiroth-j.de/spring-security-ltpa2/</url>
+			<url>${project.distributionManagement.site.url}</url>
 		</site>
 	</distributionManagement>
 </project>
