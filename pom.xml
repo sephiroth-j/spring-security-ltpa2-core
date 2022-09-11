@@ -384,11 +384,11 @@
 	<distributionManagement>
 		<repository>
 			<id>mrepo.sephiroth-j.de</id>
-			<url>${project.distributionManagement.repository.url}</url>
+			<url>${distributionManagement.repositoryUrl}</url>
 		</repository>
 		<site>
 			<id>www.sephiroth-j.de/java/</id>
-			<url>${project.distributionManagement.site.url}</url>
+			<url>${distributionManagement.siteUrl}</url>
 		</site>
 	</distributionManagement>
 </project>
