@@ -35,7 +35,7 @@
 		<maven.compiler.release>${project.java.version}</maven.compiler.release>
 		<maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
 		<lombok.version>[1.18.24,1.99.99)</lombok.version>
-		<spring.security.version>[6.0.0-M6,6.99.99)</spring.security.version>
+		<spring.security.version>[6.0.0,6.99.99)</spring.security.version>
 		<junit.jupiter.version>[5.9.0,5.99.99)</junit.jupiter.version>
 		<reactor.version>[3.2.0.RELEASE,3.99.99)</reactor.version>
 		<jacoco.version>0.8.8</jacoco.version>
@@ -124,7 +124,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.2.2</version>
+				<version>3.3.0</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -169,7 +169,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>3.0.0-M6</version>
+				<version>3.0.0-M7</version>
 				<configuration>
 					<pushChanges>false</pushChanges>
 					<localCheckout>true</localCheckout>
@@ -332,7 +332,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>[6.0.0-M5,6.99.99)</version>
+			<version>[6.0.0,6.99.99)</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -384,11 +384,4 @@
 			<url>${distributionManagement.siteUrl}</url>
 		</site>
 	</distributionManagement>
-
-	<repositories>
-		<repository>
-			<id>Spring Milestones</id>
-			<url>https://repo.spring.io/milestone/</url>
-		</repository>
-	</repositories>
 </project>
