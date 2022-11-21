@@ -79,9 +79,8 @@ public class Ltpa2Token
 	public void setExpire(@NonNull final String expire)
 	{
 		Assert.hasText(expire, "expire must not be empty");
-		this.expire = LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.valueOf(expire)), ZoneId.systemDefault());
+		this.expire = LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(expire)), ZoneId.systemDefault());
 	}
-	
 
 	/**
 	 * checks if this token is expired
@@ -128,15 +127,12 @@ public class Ltpa2Token
 	{
 		Assert.notNull(attribute, "attribute must not be null");
 
-		switch (attribute)
+		return switch (attribute)
 		{
-			case USER_ATTRIBUTE_NAME:
-				return user;
-			case EXPIRE_ATTRIBUTE_NAME:
-				return expire != null ? String.valueOf(expire.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()) : null;
-			default:
-				return additionalAttributes.get(attribute);
-		}
+			case USER_ATTRIBUTE_NAME -> user;
+			case EXPIRE_ATTRIBUTE_NAME -> expire != null ? String.valueOf(expire.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()) : null;
+			default -> additionalAttributes.get(attribute);
+		};
 	}
 
 	/**
@@ -154,14 +150,9 @@ public class Ltpa2Token
 
 		switch (attribute)
 		{
-			case USER_ATTRIBUTE_NAME:
-				setUser(value);
-				break;
-			case EXPIRE_ATTRIBUTE_NAME:
-				setExpire(value);
-				break;
-			default:
-				additionalAttributes.put(attribute, value);
+			case USER_ATTRIBUTE_NAME -> setUser(value);
+			case EXPIRE_ATTRIBUTE_NAME -> setExpire(value);
+			default -> additionalAttributes.put(attribute, value);
 		}
 		return this;
 	}
