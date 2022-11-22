@@ -26,11 +26,22 @@ public class InvalidLtpa2TokenException extends AuthenticationException
 {
 	private static final long serialVersionUID = -1352184826130137850L;
 
-	public InvalidLtpa2TokenException(String msg, Throwable t)
+	/**
+	 * Constructs an {@code InvalidLtpa2TokenException} with the specified message and root cause.
+	 *
+	 * @param msg the detail message
+	 * @param cause the root cause
+	 */
+	public InvalidLtpa2TokenException(String msg, Throwable cause)
 	{
-		super(msg, t);
+		super(msg, cause);
 	}
 
+	/**
+	 * Constructs an {@code InvalidLtpa2TokenException} with the specified message and no root cause.
+	 *
+	 * @param msg the detail message
+	 */
 	public InvalidLtpa2TokenException(String msg)
 	{
 		super(msg);

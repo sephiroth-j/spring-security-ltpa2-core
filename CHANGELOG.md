@@ -2,6 +2,10 @@
 
 ## Unreleased
 ### ⚠ Breaking
+- requires Spring Security 6.0+
+- requires Jakarta Servlet™ 5.0 / Jakarta EE 9+ (`jakarta.*` Namespace)
+- requires Java 17+
+
 ### ⭐ New Features
 ### 🐞 Bugs Fixed
 
