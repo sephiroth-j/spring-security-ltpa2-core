@@ -21,6 +21,12 @@ curl -i -b "My-Auth-Cookie=<token-value>" http://localhost:8080/hello
 
 An absolute minimum requirement for configuration are the shared secret key needed for decrypting the token and, in order to verify its signature, the public key from the identity provider that created the token.
 
+## Version Compatibility Matrix
+Spring Security LTPA2 | Spring Security | Java
+--------------------- | --------------- | ----
+2.0.x (current) | 6.x | 17+
+1.1.x | 5.x | 8+
+
 ## Usage
 Checkout the [servlet sample project](https://github.com/sephiroth-j/spring-security-ltpa2-sample) or [reactive sample project](https://github.com/sephiroth-j/spring-security-ltpa2-reactive-sample) for a complete example.
 
@@ -40,7 +46,7 @@ Add the library as an dependency together with your Spring Security dependencies
 	<dependency>
 		<groupId>de.sephiroth-j</groupId>
 		<artifactId>spring-security-ltpa2</artifactId>
-		<version>[1.0.0,)</version>
+		<version>[2.0.0,)</version>
 	</dependency>
 </dependencies>
 
@@ -67,9 +73,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 	protected void configure(HttpSecurity http) throws Exception
 	{
 		http
-			.authorizeRequests()
-				.antMatchers("/", "/home").permitAll()
-				.antMatchers("/hello").hasRole("USER")
+			.authorizeHttpRequests()
+				.requestMatchers("/", "/home").permitAll()
+				.requestMatchers("/hello").hasRole("DEVELOPERS")
+				// all other require any authentication
+				.anyRequest().authenticated()
 				.and()
 			// configure LTPA2 Support
 			.apply(new Ltpa2Configurer())
