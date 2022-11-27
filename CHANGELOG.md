@@ -5,7 +5,7 @@
 ### ⭐ New Features
 ### 🐞 Bugs Fixed
 
-## v2.0.0 - 2022-??-??
+## v2.0.0 - 2022-11-27
 ### ⚠ Breaking
 - requires Spring Security 6.0+
 - requires Jakarta Servlet™ 6.0 / Jakarta EE 9+ (`jakarta.*` Namespace)
