@@ -44,8 +44,9 @@ class Ltpa2ConfigurerTest
 	{
 		ApplicationContext context = mock(ApplicationContext.class);
 		HttpSecurity httpSecurity = mock(HttpSecurity.class);
+		UserDetailsService userDetailsService = mock(UserDetailsService.class);
 		given(httpSecurity.getSharedObject(ApplicationContext.class)).will(invocation -> context);
-		given(context.getBean(UserDetailsService.class)).will(invocation -> mock(invocation.getArgument(0)));
+		given(context.getBean(UserDetailsService.class)).will(invocation -> userDetailsService);
 		final String headerName = "header";
 		final String cookieName = "cookie";
 		final SecretKey sharedKey = LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD);
@@ -77,8 +78,9 @@ class Ltpa2ConfigurerTest
 	{
 		ApplicationContext context = mock(ApplicationContext.class);
 		HttpSecurity httpSecurity = mock(HttpSecurity.class);
+		UserDetailsService userDetailsService = mock(UserDetailsService.class);
 		given(httpSecurity.getSharedObject(ApplicationContext.class)).will(invocation -> context);
-		given(context.getBean(UserDetailsService.class)).will(invocation -> mock(invocation.getArgument(0)));
+		given(context.getBean(UserDetailsService.class)).will(invocation -> userDetailsService);
 		final SecretKey sharedKey = LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD);
 		final PublicKey publicKey = LtpaKeyUtils.decodePublicKey(Constants.ENCODED_PUBLIC_KEY);
 		final AuthenticationFailureHandler failureHandler = new AuthenticationEntryPointFailureHandler(new Http403ForbiddenEntryPoint());
