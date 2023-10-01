@@ -14,8 +14,8 @@
 		<url>https://github.com/sephiroth-j/spring-security-ltpa2-core/issues</url>
 	</issueManagement>
 	<ciManagement>
-		<system>Travis</system>
-		<url>https://app.travis-ci.com/github/sephiroth-j/spring-security-ltpa2-core</url>
+		<system>GitHub</system>
+		<url>https://github.com/sephiroth-j/spring-security-ltpa2-core/actions?query=workflow%3A%22CI+build%22</url>
 	</ciManagement>
 	<licenses>
 		<license>

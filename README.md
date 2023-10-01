@@ -1,6 +1,6 @@
 # Spring Security LTPA2
 
-[![Build Status](https://app.travis-ci.com/sephiroth-j/spring-security-ltpa2-core.svg?branch=master)](https://app.travis-ci.com/github/sephiroth-j/spring-security-ltpa2-core) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=de.sephiroth-j%3Aspring-security-ltpa2&metric=alert_status)](https://sonarcloud.io/dashboard?id=de.sephiroth-j%3Aspring-security-ltpa2) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Build Status](https://github.com/sephiroth-j/spring-security-ltpa2-core/workflows/CI%20build/badge.svg)](https://github.com/sephiroth-j/spring-security-ltpa2-core/actions?query=workflow%3A%22CI+build%22) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=de.sephiroth-j%3Aspring-security-ltpa2&metric=alert_status)](https://sonarcloud.io/dashboard?id=de.sephiroth-j%3Aspring-security-ltpa2) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 Add Spring Security support for user pre-authentication using IBM Lightweight Third Party Authentication (LTPA) v2. LTPA2 tokens can be created as well to consume other LTPA2-protected services or act as an LTPA2 authentication service.
 
