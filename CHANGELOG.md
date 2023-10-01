@@ -4,6 +4,7 @@
 ### ⚠ Breaking
 ### ⭐ New Features
 ### 🐞 Bugs Fixed
+- removed usage of `org.springframework.util.Base64Utils` since it is deprecated now
 
 ## v2.0.0 - 2022-11-27
 ### ⚠ Breaking

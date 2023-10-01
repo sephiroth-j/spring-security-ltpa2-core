@@ -28,6 +28,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Arrays;
+import java.util.Base64;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -39,7 +40,6 @@ import javax.crypto.spec.SecretKeySpec;
 import lombok.experimental.UtilityClass;
 import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
-import org.springframework.util.Base64Utils;
 
 /**
  * Utility class for working with encoded and/or encrpyted keys exported from IBM WebSphere Application Server and Liberty Profile
@@ -119,7 +119,7 @@ public class LtpaKeyUtils
 		
 		try
 		{
-			final byte[] decodeFromString = Base64Utils.decodeFromString(encryptedKey);
+			final byte[] decodeFromString = Base64.getDecoder().decode(encryptedKey);
 			final byte[] secret = decrypt(decodeFromString, password);
 			return new SecretKeySpec(secret, 0, SHARED_KEY_SIZE, "AES");
 		}
@@ -143,7 +143,7 @@ public class LtpaKeyUtils
 		
 		try
 		{
-			final byte[] parts = Base64Utils.decodeFromString(encryptedPublicKey);
+			final byte[] parts = Base64.getDecoder().decode(encryptedPublicKey);
 			Assert.isTrue(parts.length == PUBLIC_MODULUS_LENGTH + PUBLIC_EXPONENT_LENGTH, "invalid encryptedPublicKey");
 			final BigInteger modulus = new BigInteger(Arrays.copyOfRange(parts, 0, PUBLIC_MODULUS_LENGTH));
 			final BigInteger exponent = new BigInteger(Arrays.copyOfRange(parts, PUBLIC_MODULUS_LENGTH, PUBLIC_MODULUS_LENGTH + PUBLIC_EXPONENT_LENGTH));
@@ -173,7 +173,7 @@ public class LtpaKeyUtils
 		
 		try
 		{
-			final byte[] parts = decrypt(Base64Utils.decodeFromString(encryptedKey), password);
+			final byte[] parts = decrypt(Base64.getDecoder().decode(encryptedKey), password);
 
 			// read the length of the field with the private exponent
 			final int privateExponentLength = (new BigInteger(Arrays.copyOfRange(parts, 0, PRIVATE_EXPONENT_LENGTH_FIELD_LENGTH))).intValue();

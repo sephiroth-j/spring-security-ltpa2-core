@@ -25,6 +25,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
+import java.util.Base64;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -34,7 +35,6 @@ import javax.crypto.spec.IvParameterSpec;
 import lombok.experimental.UtilityClass;
 import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
-import org.springframework.util.Base64Utils;
 
 /**
  * Utility class for operations on an LTPA2 token
@@ -67,7 +67,7 @@ public class Ltpa2Utils
 
 		try
 		{
-			final byte[] rawToken = Base64Utils.decodeFromString(encryptedToken);
+			final byte[] rawToken = Base64.getDecoder().decode(encryptedToken);
 			final Cipher c = Cipher.getInstance(TOKEN_ENCRYPTION_ALGORITHM);
 			final IvParameterSpec iv = new IvParameterSpec(key.getEncoded());
 			c.init(Cipher.DECRYPT_MODE, key, iv);
@@ -194,7 +194,7 @@ public class Ltpa2Utils
 			final MessageDigest md = MessageDigest.getInstance(SIGNATURE_DIGEST_METHOD);
 			final byte[] bodyHash = md.digest(tokenParts[0].getBytes());
 			signer.update(bodyHash);
-			return signer.verify(Base64Utils.decodeFromString(tokenParts[2]));
+			return signer.verify(Base64.getDecoder().decode(tokenParts[2]));
 		}
 		catch (InvalidKeyException | NoSuchAlgorithmException | SignatureException ex)
 		{
@@ -228,7 +228,7 @@ public class Ltpa2Utils
 			final MessageDigest md = MessageDigest.getInstance(SIGNATURE_DIGEST_METHOD);
 			final byte[] bodyHash = md.digest(token.getBytes());
 			signer.update(bodyHash);
-			return Base64Utils.encodeToString(signer.sign());
+			return Base64.getEncoder().encodeToString(signer.sign());
 		}
 		catch (InvalidKeyException | NoSuchAlgorithmException | SignatureException ex)
 		{
@@ -263,7 +263,7 @@ public class Ltpa2Utils
 			final IvParameterSpec iv = new IvParameterSpec(key.getEncoded());
 			c.init(Cipher.ENCRYPT_MODE, key, iv);
 			final byte[] rawEncryptedToken = c.doFinal(rawTokenStr.toString().getBytes(StandardCharsets.UTF_8));
-			return Base64Utils.encodeToString(rawEncryptedToken);
+			return Base64.getEncoder().encodeToString(rawEncryptedToken);
 		}
 		catch (InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException | InvalidAlgorithmParameterException ex)
 		{

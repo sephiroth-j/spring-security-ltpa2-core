@@ -24,6 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.PublicKey;
+import java.util.Base64;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import javax.crypto.Cipher;
@@ -46,7 +47,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.util.Base64Utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -215,7 +215,7 @@ class Ltpa2FilterTest
 		final IvParameterSpec iv = new IvParameterSpec(decryptSharedKey.getEncoded());
 		c.init(Cipher.ENCRYPT_MODE, decryptSharedKey, iv);
 		final byte[] rawEncryptedToken = c.doFinal(tokenWithInvalidSignature.getBytes(StandardCharsets.UTF_8));
-		String encryptedToken = Base64Utils.encodeToString(rawEncryptedToken);
+		String encryptedToken = Base64.getEncoder().encodeToString(rawEncryptedToken);
 
 		AuthenticationException expected = Assertions.assertThrows(InsufficientAuthenticationException.class, () ->
 		{

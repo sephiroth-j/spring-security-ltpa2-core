@@ -20,6 +20,7 @@ import de.sephirothj.spring.security.ltpa2.Ltpa2Token;
 import de.sephirothj.spring.security.ltpa2.LtpaKeyUtils;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
+import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
@@ -29,7 +30,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.mock.http.server.reactive.MockServerHttpRequest;
 import org.springframework.mock.web.server.MockServerWebExchange;
 import org.springframework.security.core.Authentication;
-import org.springframework.util.Base64Utils;
 import reactor.test.StepVerifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -159,7 +159,7 @@ class Ltpa2AuthConverterTest
 		final IvParameterSpec iv = new IvParameterSpec(decryptSharedKey.getEncoded());
 		c.init(Cipher.ENCRYPT_MODE, decryptSharedKey, iv);
 		final byte[] rawEncryptedToken = c.doFinal(tokenWithInvalidSignature.getBytes(StandardCharsets.UTF_8));
-		String encryptedToken = Base64Utils.encodeToString(rawEncryptedToken);
+		String encryptedToken = Base64.getEncoder().encodeToString(rawEncryptedToken);
 
 		MockServerHttpRequest.BaseBuilder requestBuilder = MockServerHttpRequest.get("/").header(HttpHeaders.AUTHORIZATION, "LtpaToken2 ".concat(encryptedToken));
 		StepVerifier.create(uut.convert(MockServerWebExchange.from(requestBuilder.build())))
@@ -192,7 +192,7 @@ class Ltpa2AuthConverterTest
 		final IvParameterSpec iv = new IvParameterSpec(decryptSharedKey.getEncoded());
 		c.init(Cipher.ENCRYPT_MODE, decryptSharedKey, iv);
 		final byte[] rawEncryptedToken = c.doFinal(tokenWithMissingSignature.getBytes(StandardCharsets.UTF_8));
-		String encryptedToken = Base64Utils.encodeToString(rawEncryptedToken);
+		String encryptedToken = Base64.getEncoder().encodeToString(rawEncryptedToken);
 
 		MockServerHttpRequest.BaseBuilder requestBuilder = MockServerHttpRequest.get("/").header(HttpHeaders.AUTHORIZATION, "LtpaToken2 ".concat(encryptedToken));
 		StepVerifier.create(uut.convert(MockServerWebExchange.from(requestBuilder.build())))
