@@ -38,9 +38,10 @@
 		<spring.security.version>[6.0.0,6.99.99)</spring.security.version>
 		<junit.jupiter.version>[5.9.0,5.99.99)</junit.jupiter.version>
 		<reactor.version>[3.2.0.RELEASE,3.99.99)</reactor.version>
-		<jacoco.version>0.8.8</jacoco.version>
-		<wagon.version>3.5.2</wagon.version>
-		<javadoc.version>3.4.1</javadoc.version>
+		<jacoco.version>0.8.10</jacoco.version>
+		<wagon.version>3.5.3</wagon.version>
+		<javadoc.version>3.5.0</javadoc.version>
+		<byte-buddy.version>[1.14.0,1.99.99)</byte-buddy.version>
 	</properties>
 	
 	<developers>
@@ -74,7 +75,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>3.2.1</version>
+						<version>3.3.0</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -87,7 +88,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>3.0.1</version>
+						<version>3.1.0</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -108,7 +109,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.10.1</version>
+				<version>3.11.0</version>
 				<configuration>
 					<showDeprecation>true</showDeprecation>
 				</configuration>
@@ -116,7 +117,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0-M7</version>
+				<version>3.1.2</version>
 				<configuration>
 					<trimStackTrace>false</trimStackTrace>
 				</configuration>
@@ -141,7 +142,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>buildnumber-maven-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.2.0</version>
 				<executions>
 					<execution>
 						<goals>
@@ -159,7 +160,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>3.3.1</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -169,7 +170,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>3.0.0-M7</version>
+				<version>3.0.1</version>
 				<configuration>
 					<pushChanges>false</pushChanges>
 					<localCheckout>true</localCheckout>
@@ -180,12 +181,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.3.0</version>
+				<version>3.6.0</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.1.1</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -238,7 +239,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>3.4.1</version>
+				<version>3.4.5</version>
 				<reportSets>
 					<reportSet>
 						<reports>
@@ -356,7 +357,7 @@
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
-			<version>[3.17.0,3.99.99)</version>
+			<version>[3.24.0,3.99.99)</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -368,7 +369,19 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>[4.10.0,4.99.99)</version>
+			<version>[5.5.0,5.99.99)</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.bytebuddy</groupId>
+			<artifactId>byte-buddy</artifactId>
+			<version>${byte-buddy.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.bytebuddy</groupId>
+			<artifactId>byte-buddy-agent</artifactId>
+			<version>${byte-buddy.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
