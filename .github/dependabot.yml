@@ -1,0 +1,16 @@
+version: 2
+updates:
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "org.springframework.security:spring-security-core"
+      - dependency-name: "org.springframework.security:spring-security-config"
+      - dependency-name: "org.springframework.security:spring-security-web"
+      - dependency-name: "io.projectreactor:reactor-core"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
