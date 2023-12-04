@@ -38,7 +38,7 @@
 		<spring.security.version>[6.0.0,6.99.99)</spring.security.version>
 		<junit.jupiter.version>[5.9.0,5.99.99)</junit.jupiter.version>
 		<reactor.version>[3.2.0.RELEASE,3.99.99)</reactor.version>
-		<jacoco.version>0.8.10</jacoco.version>
+		<jacoco.version>0.8.11</jacoco.version>
 		<wagon.version>3.5.3</wagon.version>
 		<javadoc.version>3.6.2</javadoc.version>
 		<byte-buddy.version>[1.14.0,1.99.99)</byte-buddy.version>
