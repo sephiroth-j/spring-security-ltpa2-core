@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="297mm"
+   height="210mm"
+   viewBox="0 0 297 210"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   sodipodi:docname="token.svg"
+   enable-background="new"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs2">
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter845"
+       x="-0.003766537"
+       y="-2.9490586e-05"
+       width="1.0075331"
+       height="1.0000295">
+      <feBlend
+         inkscape:collect="always"
+         mode="multiply"
+         in2="BackgroundImage"
+         id="feBlend847" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.98"
+     inkscape:cx="614.64646"
+     inkscape:cy="156.81818"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer2"
+     showgrid="false"
+     inkscape:window-width="2560"
+     inkscape:window-height="1369"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:showpageshadow="false"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:export-bgcolor="#ffffffff"
+     inkscape:clip-to-page="false" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="https://www.apache.org/licenses/LICENSE-2.0" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Ronny Perinke</dc:title>
+          </cc:Agent>
+        </dc:creator>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Token"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-87)"
+     style="display:inline">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3713"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none"
+       transform="matrix(0.26458333,0,0,0.26458333,0,87)"><flowRegion
+         id="flowRegion3715"><rect
+           id="rect3717"
+           width="879.8429"
+           height="303.04578"
+           x="63.63961"
+           y="216.9037" /></flowRegion><flowPara
+         id="flowPara3719" /></flowRoot>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3732"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;line-height:1.25;font-family:'Cascadia Mono PL';-inkscape-font-specification:'Cascadia Mono PL, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none"
+       transform="matrix(0.26458333,0,0,0.26458333,0,87)"
+       inkscape:export-xdpi="70"
+       inkscape:export-ydpi="70"><flowRegion
+         id="flowRegion3734"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:'Cascadia Mono PL';-inkscape-font-specification:'Cascadia Mono PL, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"><rect
+           id="rect3736"
+           width="1016.2133"
+           height="64.64978"
+           x="55.558388"
+           y="189.62959"
+           ry="0"
+           style="font-size:16.0000002px;-inkscape-font-specification:'Cascadia Mono PL, Normal';font-family:'Cascadia Mono PL';font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal" /></flowRegion><flowPara
+         id="flowPara3738"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:'Cascadia Mono PL';-inkscape-font-specification:'Cascadia Mono PL, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle">expire:1519043460000$u:user\:LdapRegistry/CN=...,DC=bar%1519043460000%ipDldk....eGhvqA=</flowPara></flowRoot>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Body"
+     style="display:inline;filter:url(#filter845)">
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:1.02605;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 42.508572,55.015295 c -0.04675,23.525372 68.134298,0.0217 68.102878,23.492373 -0.0467,-23.525382 68.13432,-0.02169 68.10292,-23.492383"
+       id="path3750"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-xdpi="70"
+       inkscape:export-ydpi="70" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:'Cascadia Mono PL';-inkscape-font-specification:'Cascadia Mono PL, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="110.41768"
+       y="86.765732"
+       id="text3805"
+       inkscape:export-xdpi="70"
+       inkscape:export-ydpi="70"><tspan
+         sodipodi:role="line"
+         id="tspan3803"
+         x="110.41768"
+         y="86.765732"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;font-family:'Cascadia Mono PL';-inkscape-font-specification:'Cascadia Mono PL, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;stroke-width:0.264583">Body</tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Expire"
+     style="display:inline">
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:1.01951;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 178.7016,49.999747 c -0.0117,-23.529947 17.55068,-0.02169 17.54259,-23.496943 -0.0117,23.529955 17.55067,0.02169 17.54257,23.496953"
+       id="path3750-4"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-xdpi="70"
+       inkscape:export-ydpi="70" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:'Cascadia Mono PL';-inkscape-font-specification:'Cascadia Mono PL, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="196.20801"
+       y="23.622887"
+       id="text3809"
+       inkscape:export-xdpi="70"
+       inkscape:export-ydpi="70"><tspan
+         sodipodi:role="line"
+         id="tspan3807"
+         x="196.20801"
+         y="23.622887"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;font-family:'Cascadia Mono PL';-inkscape-font-specification:'Cascadia Mono PL, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;stroke-width:0.264583">Expire</tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer7"
+     inkscape:label="Body Part 1: Expire"
+     style="display:inline">
+    <path
+       sodipodi:nodetypes="ccc"
+       inkscape:connector-curvature="0"
+       id="path4563"
+       d="M 42.502142,49.99964 C 42.485652,26.473111 67.340111,49.97795 67.328665,26.50611 67.312175,50.032649 92.166622,26.5278 92.155161,49.99965"
+       style="display:inline;fill:none;stroke:#000000;stroke-width:1.02604;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       inkscape:export-xdpi="70"
+       inkscape:export-ydpi="70" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;font-family:'Cascadia Mono PL';-inkscape-font-specification:'Cascadia Mono PL, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="67.292473"
+       y="23.622887"
+       id="text4569"
+       inkscape:export-xdpi="70"
+       inkscape:export-ydpi="70"><tspan
+         sodipodi:role="line"
+         id="tspan4567"
+         x="67.292473"
+         y="23.622887"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;font-family:'Cascadia Mono PL';-inkscape-font-specification:'Cascadia Mono PL, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583px">Expire</tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer8"
+     inkscape:label="Body Part 2: User"
+     style="display:inline">
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:1.0375;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 92.244325,49.999366 c -0.02876,-23.520365 43.248215,-0.0217 43.228285,-23.487374 -0.0286,23.520374 43.24817,0.0217 43.2282,23.487384"
+       id="path4572"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-xdpi="70"
+       inkscape:export-ydpi="70" />
+    <text
+       id="text4576"
+       y="25.896658"
+       x="135.23485"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;font-family:'Cascadia Mono PL';-inkscape-font-specification:'Cascadia Mono PL, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"
+       inkscape:export-xdpi="70"
+       inkscape:export-ydpi="70"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;font-family:'Cascadia Mono PL';-inkscape-font-specification:'Cascadia Mono PL, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583px"
+         y="25.896658"
+         x="135.23485"
+         id="tspan4574"
+         sodipodi:role="line">User</tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="Signature"
+     style="display:inline">
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:1.02023;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 213.93697,54.980736 c -0.0144,23.529479 20.98172,0.02177 20.97206,23.496482 -0.0144,-23.529488 20.98171,-0.02177 20.97205,-23.496492"
+       id="path3750-2"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-xdpi="70"
+       inkscape:export-ydpi="70" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:'Cascadia Mono PL';-inkscape-font-specification:'Cascadia Mono PL, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="234.95294"
+       y="86.855888"
+       id="text3813"
+       inkscape:export-xdpi="70"
+       inkscape:export-ydpi="70"><tspan
+         sodipodi:role="line"
+         id="tspan3811"
+         x="234.95294"
+         y="86.855888"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;font-family:'Cascadia Mono PL';-inkscape-font-specification:'Cascadia Mono PL, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;stroke-width:0.264583">Signature</tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer5"
+     inkscape:label="Boxes Delimiter Token"
+     style="display:inline">
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ff0000;stroke-width:0.358179;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       id="rect4555"
+       width="3.1418207"
+       height="4.6418209"
+       x="177.21227"
+       y="50.179089"
+       ry="0.029232197"
+       inkscape:export-xdpi="70"
+       inkscape:export-ydpi="70" />
+    <rect
+       ry="0.029232195"
+       y="50.179089"
+       x="212.17909"
+       height="4.6418204"
+       width="3.1418207"
+       id="rect4557"
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ff0000;stroke-width:0.358179;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       inkscape:export-xdpi="70"
+       inkscape:export-ydpi="70" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer6"
+     inkscape:label="Box Delimiter Body"
+     style="display:inline">
+    <rect
+       ry="0.02936895"
+       y="50.168232"
+       x="90.782196"
+       height="4.6635361"
+       width="2.7594969"
+       id="rect4560"
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ff0000;stroke-width:0.336464;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       inkscape:export-xdpi="70"
+       inkscape:export-ydpi="70" />
+  </g>
+</svg>
