@@ -24,7 +24,7 @@ com.ibm.websphere.ltpa.PublicKey=AOECPMDAs0o7MzQIgxZhAXJZ2BaDE3mqRZAbkbQO38CgUIg
 				<p><code>com.ibm.websphere.ltpa.3DESKey</code> is the encrypted shared key that is used to encrypt the LTPA2-Token.</p>
 				<p><code>com.ibm.websphere.ltpa.PrivateKey</code> is your encrypted private key that you will need if want to send an LTPA2-Token.</p>
 				<p><code>com.ibm.websphere.ltpa.PublicKey</code> is the corresponding public key that the receiver of the token you created needs to verify the token signature. That's not what you need, unless you want send tokens to yourself. You need the public key from the service that sends you LTPA2-tokens. Speek with the administrator of that service, he can give it to you.</p>
-				<p><small><a href="https://www.ibm.com/support/knowledgecenter/en/SSEQTP_8.5.5/com.ibm.websphere.wlp.doc/ae/rwlp_config_ltpa.html">Source</a></small></p>
+				<p><small><a href="https://www.ibm.com/docs/en/was-liberty/base?topic=liberty-configuring-ltpa-in">Source</a></small></p>
 			</answer>
 		</faq>
 		<faq id="password">

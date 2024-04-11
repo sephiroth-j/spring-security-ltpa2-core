@@ -2,19 +2,19 @@
 
 === What is a LTPA Token?
 
-[quote,'https://www.ibm.com/support/knowledgecenter/en/SSCGGQ_1.2.0/com.ibm.ism.doc/Security/se00013_.html[IBM^]']
+[quote,'https://www.ibm.com/docs/en/wip-mg/2.0.0?topic=authentication-lightweight-third-party-ltpa[IBM^]']
 Lightweight Third Party Authentication (LTPA) is a single sign-on credential format.
 
-[quote,'https://www.ibm.com/support/knowledgecenter/en/SSAW57_8.5.5/com.ibm.websphere.nd.doc/ae/cwbs_ltpatokens.html[IBM^]']
+[quote,'https://www.ibm.com/docs/en/was-nd/8.5.5?topic=authentication-ltpa-ltpa-version-2-tokens[IBM^]']
 The Lightweight Third Party Authentication (LTPA) token is a specific *type of binary security token*. The web services security implementation *for WebSphere Application Server*, Version 5 and later supports the LTPA Version 1 token. WebSphere Application Server Version 7 and later supports the *LTPA Version 2* token using the JAX-WS runtime environment.
 
-[quote,'https://www.ibm.com/support/knowledgecenter/en/SSPREK_6.1.0/com.ibm.itame.doc_6.1/am61_webservers_admin136.htm[IBM^]']
-The LtpaToken2 cookie is encoded using enhanced security over the LtpaToken.
+[quote,'https://www.ibm.com/docs/en/sva/7.0.0?topic=authentication-handling-ltpatoken2-cookies[IBM^]']
+The LtpaToken2 cookie is encoded using enhanced security over the LtpaToken cookie.
 
-[quote,'https://www.ibm.com/support/knowledgecenter/en/SSCGGQ_1.2.0/com.ibm.ism.doc/Security/se00013_.html[IBM^]']
+[quote,'https://www.ibm.com/docs/en/wip-mg/2.0.0?topic=authentication-lightweight-third-party-ltpa[IBM^]']
 With LTPA, the user authenticates with the first server that is accessed, by using a user name and password. After authenticating, the user receives an LTPA token, which is only valid for one session. The token is used to identify the user on other servers within the same domain name system, where the servers are configured to use LTPA. Therefore, the user enters a user name and password only once, and the user directory is accessed only once to verify the identity of that user.
 
-[quote,'https://www.ibm.com/support/knowledgecenter/en/SSCGGQ_1.2.0/com.ibm.ism.doc/Security/se00013_.html[IBM^]']
+[quote,'https://www.ibm.com/docs/en/wip-mg/2.0.0?topic=authentication-lightweight-third-party-ltpa[IBM^]']
 LTPA can be used with WebSphere® Application Server and Worklight®. The servers must all use the same LDAP server for user authentication.
 
 image::./images/token-workflow-in-sso.png["token workflow in sso",align="center"]
