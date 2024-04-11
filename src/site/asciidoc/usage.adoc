@@ -23,7 +23,7 @@ Add it as an dependency together with you Spring Security dependencies.
 		<dependency>
 			<groupId>de.sephiroth-j</groupId>
 			<artifactId>spring-security-ltpa2</artifactId>
-			<version>[1.0.0,)</version>
+			<version>[2.0.0,)</version>
 		</dependency>
 	</dependencies>
 
