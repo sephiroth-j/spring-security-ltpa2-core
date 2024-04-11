@@ -66,31 +66,35 @@ As the user is pre-authenticated, **an instance of `UserDetailsService` is requi
 ```java
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter
+public class WebSecurityConfig
 {
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception
+	@Bean
+	public SecurityFilterChain ltpa2SecurityFilterChain(final HttpSecurity http, final UserDetailsService userDetailsService) throws Exception
 	{
 		http
-			.authorizeHttpRequests()
-				.requestMatchers("/", "/home").permitAll()
-				.requestMatchers("/hello").hasRole("DEVELOPERS")
+			.authorizeHttpRequests(authorize -> authorize
 				// all other require any authentication
 				.anyRequest().authenticated()
-				.and()
+			)
 			// configure LTPA2 Support
 			.apply(new Ltpa2Configurer())
 				.sharedKey(sharedKey())
 				.signerKey(signerKey())
 			;
+		http.userDetailsService(userDetailsService);
+		return http.build();
 	}
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception
+	@Bean
+	public UserDetailsService userDetailsService()
 	{
-		auth.inMemoryAuthentication()
-			.withUser("user").password("password").roles("USER");
+		final UserDetails user = User.builder()
+			.username("user")
+			.password("{noop}password")
+			.roles("USER")
+			.build();
+		return new InMemoryUserDetailsManager(user);
 	}
 }
 ```
@@ -107,14 +111,14 @@ public class WebSecurityConfig
 {
 
 	@Bean
-	public SecurityWebFilterChain springSecurityFilterChain(final ServerHttpSecurity http, final ReactiveUserDetailsService userDetailsService, AuthenticationWebFilter ltpa2AuthenticationWebFilter)
+	public SecurityWebFilterChain springSecurityFilterChain(final ServerHttpSecurity http, final AuthenticationWebFilter ltpa2AuthenticationWebFilter)
 	{
 		http
-			.httpBasic().disable()
-			.authorizeExchange()
+			.csrf(CsrfSpec::disable)
+			.httpBasic(HttpBasicSpec::disable)
+			.authorizeExchange(authorize -> authorize
 			// all other require any authentication
-			.anyExchange().authenticated()
-			.and()
+			.anyExchange().authenticated())
 			// apply ltpa2 authentication filter
 			.addFilterAt(ltpa2AuthenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION);
 		return http.build();
@@ -135,7 +139,12 @@ public class WebSecurityConfig
 	@Bean
 	public ReactiveUserDetailsService userDetailsService()
 	{
-		return new MapReactiveUserDetailsService(User.withUsername("user").password("password").roles("USER").build());
+		final UserDetails user = User.builder()
+			.username("user")
+			.password("{noop}password")
+			.roles("USER")
+			.build();
+		return new MapReactiveUserDetailsService(user);
 	}
 }
 ```
