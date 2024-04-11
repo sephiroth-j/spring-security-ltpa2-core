@@ -3,8 +3,8 @@
 This short example shows how to use the LTPA2 Security Module. This example uses Spring Boot.
 
 === Requirements
-- Spring Security 5.1+
-- Spring Boot 2.1+
+- Spring Security 6.0+
+- Spring Boot 3.1+
 
 === Integration
 ==== pom.xml
@@ -40,70 +40,74 @@ Add the `Ltpa2Filter` using `Ltpa2Configurer`. It needs a `SecretKey` instance o
 
 As the user is pre-authenticated, an instance of `UserDetailsService` is required to setup the security context and populate it with the granted roles for the authenticated user. In this example we will simply use `InMemoryAuthentication` with a hard-coded list of users and their roles.
 
+.Example with In-Memory Authentication
 [source,java]
 --
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter
+public class WebSecurityConfig
 {
-
-	@Override
-	protected void configure(HttpSecurity http) throws Exception
+	@Bean
+	public SecurityFilterChain ltpa2SecurityFilterChain(final HttpSecurity http, final UserDetailsService userDetailsService) throws Exception
 	{
 		http
-			.authorizeRequests()
-				.antMatchers("/", "/home").permitAll()
-				.antMatchers("/hello").hasRole("USER")
-				.and()
+			.authorizeHttpRequests(authorize -> authorize
+				// all other require any authentication
+				.anyRequest().authenticated()
+			)
 			// configure LTPA2 Support
 			.apply(new Ltpa2Configurer())
 				.sharedKey(sharedKey())
 				.signerKey(signerKey())
 			;
+		http.userDetailsService(userDetailsService);
+		return http.build();
 	}
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception
+	@Bean
+	public UserDetailsService userDetailsService()
 	{
-		auth.inMemoryAuthentication()
-			.withUser("user").password("password").roles("USER");
+		final UserDetails user = User.builder()
+			.username("user")
+			.password("{noop}password")
+			.roles("USER")
+			.build();
+		return new InMemoryUserDetailsManager(user);
 	}
 }
 --
-
-IMPORTANT: It might be necessary to explicitly create a `UserDetailsService` and set it the with `AuthenticationManagerBuilder#userDetailsService(UserDetailsService)`! It is not needed in the example above because this configuration will automatically expose a `UserDetailsService` but if you try to use LDAP with `auth.ldapAuthentication()` https://github.com/spring-projects/spring-security-oauth/issues/685#issuecomment-262010233[then no `UserDetailsService` will be exposed].
 
 .Example with LDAP
 [source,java]
 --
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter
+public class WebSecurityConfig
 {
-
-	@Override
-	protected void configure(HttpSecurity http) throws Exception
+	@Bean
+	public SecurityFilterChain ltpa2SecurityFilterChain(final HttpSecurity http, final UserDetailsService userDetailsService) throws Exception
 	{
 		http
-			.authorizeRequests()
-				.antMatchers("/", "/home").permitAll()
-				.antMatchers("/hello").hasRole("USER")
-				.and()
+			.authorizeHttpRequests(authorize -> authorize
+				// all other require any authentication
+				.anyRequest().authenticated()
+			)
 			// configure LTPA2 Support
 			.apply(new Ltpa2Configurer())
 				.sharedKey(sharedKey())
 				.signerKey(signerKey())
 			;
-		http.userDetailsService(userDetailsService());
+		http.userDetailsService(userDetailsService);
+		return http.build();
 	}
 
-	@Override
+	@Bean
 	public UserDetailsService userDetailsService()
 	{
-		DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource("ldap://127.0.0.1:33389/dc=foo,dc=bar");
+		final DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource("ldap://127.0.0.1:33389/dc=foo,dc=bar");
 		contextSource.afterPropertiesSet();
 
-		LdapUserDetailsManager manager = new LdapUserDetailsManager(contextSource);
+		final LdapUserDetailsManager manager = new LdapUserDetailsManager(contextSource);
 		manager.setUsernameMapper(new DefaultLdapUsernameToDnMapper("ou=user", "cn"));
 		manager.setGroupSearchBase("ou=groups");
 		return manager;
@@ -116,6 +120,7 @@ Add an `AuthenticationWebFilter` using `Ltpa2AuthManager` and the `Ltpa2AuthConv
 
 As the user is pre-authenticated, an instance of `ReactiveUserDetailsService` is required to setup the security context and populate it with the granted roles for the authenticated user. In this example we will simply use `MapReactiveUserDetailsService` with a hard-coded list of users and their roles.
 
+.Example with In-Memory Authentication
 [source,java]
 --
 @Configuration
@@ -124,14 +129,14 @@ public class WebSecurityConfig
 {
 
 	@Bean
-	public SecurityWebFilterChain springSecurityFilterChain(final ServerHttpSecurity http, final ReactiveUserDetailsService userDetailsService, AuthenticationWebFilter ltpa2AuthenticationWebFilter)
+	public SecurityWebFilterChain springSecurityFilterChain(final ServerHttpSecurity http, final AuthenticationWebFilter ltpa2AuthenticationWebFilter)
 	{
 		http
-			.httpBasic().disable()
-			.authorizeExchange()
+			.csrf(CsrfSpec::disable)
+			.httpBasic(HttpBasicSpec::disable)
+			.authorizeExchange(authorize -> authorize
 			// all other require any authentication
-			.anyExchange().authenticated()
-			.and()
+			.anyExchange().authenticated())
 			// apply ltpa2 authentication filter
 			.addFilterAt(ltpa2AuthenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION);
 		return http.build();
@@ -152,7 +157,12 @@ public class WebSecurityConfig
 	@Bean
 	public ReactiveUserDetailsService userDetailsService()
 	{
-		return new MapReactiveUserDetailsService(User.withUsername("user").password("password").roles("USER").build());
+		final UserDetails user = User.builder()
+			.username("user")
+			.password("{noop}password")
+			.roles("USER")
+			.build();
+		return new MapReactiveUserDetailsService(user);
 	}
 }
 --
