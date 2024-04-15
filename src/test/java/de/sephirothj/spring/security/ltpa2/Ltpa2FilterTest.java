@@ -160,16 +160,15 @@ class Ltpa2FilterTest
 	{
 		Ltpa2Filter uut = new Ltpa2Filter();
 		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-		String expected = "the-token";
 		Cookie[] cookies =
 		{
-			new Cookie("LtpaToken2", expected)
+			new Cookie("LtpaToken2", "the-token%2F")
 		};
 		given(request.getCookies()).willReturn(cookies);
 
 		String actual = ReflectionTestUtils.invokeMethod(uut, "getTokenFromRequest", request);
 
-		assertThat(actual).isEqualTo(expected);
+		assertThat(actual).isEqualTo("the-token/");
 	}
 
 	@Test
@@ -242,7 +241,7 @@ class Ltpa2FilterTest
 	}
 
 	@Test
-	void shouldNotFilterTestWithCookieIOnly() throws ServletException
+	void shouldNotFilterTestWithCookieOnly() throws ServletException
 	{
 		Ltpa2Filter uut = new Ltpa2Filter();
 		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
@@ -257,6 +256,29 @@ class Ltpa2FilterTest
 	void doFilterInternalShouldSetAuthentication() throws ServletException, IOException, GeneralSecurityException
 	{
 		HttpServletRequest request = MockMvcRequestBuilders.get("/").header(HttpHeaders.AUTHORIZATION, "LtpaToken2 ".concat(Constants.TEST_TOKEN)).buildRequest(new MockServletContext());
+		UserDetailsService userDetailsService = Mockito.mock(UserDetailsService.class);
+		UserDetails mockUser = User.withUsername("test-user").roles("DEVELOPERS").password("dummy password").build();
+		given(userDetailsService.loadUserByUsername(anyString())).willReturn(mockUser);
+		Ltpa2Filter uut = new Ltpa2Filter();
+		uut.setAllowExpiredToken(true);
+		uut.setUserDetailsService(userDetailsService);
+		uut.setSharedKey(LtpaKeyUtils.decryptSharedKey(Constants.ENCRYPTED_SHARED_KEY, Constants.ENCRYPTION_PASSWORD));
+		uut.setSignerKey(LtpaKeyUtils.decodePublicKey(Constants.ENCODED_PUBLIC_KEY));
+
+		uut.doFilter(request, new MockHttpServletResponse(), new MockFilterChain());
+
+		verify(userDetailsService).loadUserByUsername(anyString());
+		assertThat(SecurityContextHolder.getContext().getAuthentication()).isInstanceOf(PreAuthenticatedAuthenticationToken.class).satisfies(auth ->
+		{
+			assertThat(auth.getPrincipal()).isEqualTo(mockUser);
+			assertThat(auth.getAuthorities()).containsExactlyInAnyOrderElementsOf((Iterable) mockUser.getAuthorities());
+		});
+	}
+
+	@Test
+	void doFilterInternalShouldSetAuthenticationWithCookieOnly() throws ServletException, IOException, GeneralSecurityException
+	{
+		HttpServletRequest request = MockMvcRequestBuilders.get("/").cookie(new Cookie("LtpaToken2", Constants.TEST_TOKEN_URI_ENCODED)).buildRequest(new MockServletContext());
 		UserDetailsService userDetailsService = Mockito.mock(UserDetailsService.class);
 		UserDetails mockUser = User.withUsername("test-user").roles("DEVELOPERS").password("dummy password").build();
 		given(userDetailsService.loadUserByUsername(anyString())).willReturn(mockUser);

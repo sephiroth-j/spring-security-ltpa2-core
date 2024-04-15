@@ -21,6 +21,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
 import java.util.stream.Stream;
 import javax.crypto.SecretKey;
@@ -40,6 +41,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
@@ -144,7 +146,12 @@ public final class Ltpa2Filter extends OncePerRequestFilter
 	@NonNull
 	private String getTokenFromCookies(@Nullable final Cookie... cookies)
 	{
-		return cookies != null ? Stream.of(cookies).filter(c -> c.getName().equals(cookieName)).findFirst().map(Cookie::getValue).orElse(EMPTY_STRING) : EMPTY_STRING;
+		return cookies != null ? Stream.of(cookies)
+			.filter(c -> c.getName().equals(cookieName))
+			.findFirst()
+			.map(Cookie::getValue)
+			.map(value -> StringUtils.uriDecode(value, StandardCharsets.ISO_8859_1))
+			.orElse(EMPTY_STRING) : EMPTY_STRING;
 	}
 
 	/**

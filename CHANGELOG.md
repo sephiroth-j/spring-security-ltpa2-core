@@ -5,6 +5,7 @@
 ### ⭐ New Features
 ### 🐞 Bugs Fixed
 - removed usage of `org.springframework.util.Base64Utils` since it is deprecated now
+- cookie value was not url-decoded (fixes [#30](https://github.com/sephiroth-j/spring-security-ltpa2-core/issues/30))
 
 ## v2.0.0 - 2022-11-27
 ### ⚠ Breaking

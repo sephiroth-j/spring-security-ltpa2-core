@@ -111,7 +111,7 @@ class Ltpa2AuthConverterTest
 		uut.setSignerKey(LtpaKeyUtils.decodePublicKey(Constants.ENCODED_PUBLIC_KEY));
 		uut.setAllowExpiredToken(true);
 
-		MockServerHttpRequest.BaseBuilder requestBuilder = MockServerHttpRequest.get("/").cookie(new HttpCookie("LtpaToken2", Constants.TEST_TOKEN));
+		MockServerHttpRequest.BaseBuilder requestBuilder = MockServerHttpRequest.get("/").cookie(new HttpCookie("LtpaToken2", Constants.TEST_TOKEN_URI_ENCODED));
 		StepVerifier.create(uut.convert(MockServerWebExchange.from(requestBuilder.build())))
 			.assertNext(this::verifyAuth)
 			.verifyComplete();

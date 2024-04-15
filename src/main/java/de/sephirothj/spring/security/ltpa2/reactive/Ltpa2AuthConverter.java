@@ -17,6 +17,7 @@ package de.sephirothj.spring.security.ltpa2.reactive;
 
 import de.sephirothj.spring.security.ltpa2.Ltpa2Token;
 import de.sephirothj.spring.security.ltpa2.Ltpa2Utils;
+import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
 import javax.crypto.SecretKey;
 import lombok.Setter;
@@ -32,6 +33,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.SynchronousSink;
@@ -166,7 +168,9 @@ public class Ltpa2AuthConverter implements ServerAuthenticationConverter, Initia
 			.filter(header -> !header.isEmpty() && header.startsWith(headerValueIdentifier))
 			.map(header -> header.substring(header.indexOf(headerValueIdentifier) + headerValueIdentifier.length()))
 			// try cookie as fallback
-			.switchIfEmpty(Mono.defer(() -> Mono.justOrEmpty(request.getCookies().getFirst(cookieName)).map(HttpCookie::getValue)))
+			.switchIfEmpty(Mono.defer(() -> Mono.justOrEmpty(request.getCookies().getFirst(cookieName))
+			.map(HttpCookie::getValue)
+			.map(value -> StringUtils.uriDecode(value, StandardCharsets.ISO_8859_1))))
 			.doOnNext(encryptedToken -> log.debug("raw LTPA2 token: {}", encryptedToken))
 			.map(encryptedToken -> Ltpa2Utils.decryptLtpa2Token(encryptedToken, sharedKey))
 			.onErrorResume(e ->
