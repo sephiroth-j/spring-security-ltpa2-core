@@ -1,6 +1,6 @@
-== The anatomy of a LTPA2 token
+= The anatomy of a LTPA2 token
 
-=== What is a LTPA Token?
+== What is a LTPA Token?
 
 [quote,'https://www.ibm.com/docs/en/wip-mg/2.0.0?topic=authentication-lightweight-third-party-ltpa[IBM^]']
 Lightweight Third Party Authentication (LTPA) is a single sign-on credential format.
@@ -19,11 +19,11 @@ LTPA can be used with WebSphere® Application Server and Worklight®. The server
 
 image::./images/token-workflow-in-sso.png["token workflow in sso",align="center"]
 
-=== Structure of a LTPA2 token
-==== External Structure
+== Structure of a LTPA2 token
+=== External Structure
 How does such a token look like? Well, as mentioned above, it is binary and it is using some sort of security. Since it send over http as a cookie (_named "LtpaToken"_), it is base64 encoded. So here is an example.
 
-.encoded token
+.**encoded token**
 [source]
 --
 Wl3qcMXdvCZjScDwB18/5VYujKDYsptVWXwNVW2yKuZw6h5Kg4amiGDeQCh2xmtNVPgCkzyk66ZWrdY70+nQEe+gotHjJtrcoW/VnbbQAwrQE5GojqK+1RdjvnwmQ9QULqcYAItw4ggZ2JF3CRR5uZ3NSFgkZpzkcMbfuYSWipNXsqEUHKONUlrg0Oc6lNKqWknx87HoPKmTnkGD5gdecu1FJCKUXSk1tanAjN3RaEWY8woxMIJQEMw/yeOrA9Fe+1nWjGAR5ITgkm+whpXfzl3n3g7kWHaBJf8DUUlKRsww4oCe3+t85b1WqoTC6FZw2qovLwn3ioRm1eIBDPO+KQZD60Ps4f+QEOjFzkLQC2f6BlZKc8KMHhffRQRpBgOD6kYV/wGDRHuvkK5vMAeJtQ==
@@ -31,7 +31,7 @@ Wl3qcMXdvCZjScDwB18/5VYujKDYsptVWXwNVW2yKuZw6h5Kg4amiGDeQCh2xmtNVPgCkzyk66ZWrdY7
 
 If we base64-decode it, it will look like this.
 
-.decoded token
+.**decoded token**
 [source]
 --
 00000000  5a 5d ea 70 c5 dd bc 26  63 49 c0 f0 07 5f 3f e5  |Z].p...&cI..._?.|
@@ -58,7 +58,7 @@ If we base64-decode it, it will look like this.
 
 Not so nice, isn't it? Okay, then let's *decrypt* it! The *encryption algorithm is AES-128-CBC with PKCS5/7 padding* and as such we need link:faq.html#where-to-find[the shared secret key]. Now it is not so binary anymore!
 
-.decrypted token
+.**decrypted token**
 [source]
 --
 expire:1519043460000$u:user\:LdapRegistry/CN=fae6d87c-c642-45a6-9f09-915c7fd8b08c,OU=user,DC=foo,DC=bar%1519043460000%ipDldknyTbaSZluHTW3I/Dhh9veyi+QHoX3s4MPxvvTc09COCGGbOQLxiGoIqdBxDrv55WChFNDD6uUtnt74gNX2KTRQpbwY5zSMbNHkUrh/6X+OOqbvcR3fAmIBkTAyBwkX3u6T2WEoEq9FxOYpvlhqvygoJYrjM6JuQeGhvqA=
@@ -82,5 +82,5 @@ image::./images/body-parts.png["body parts",align="center"]
 ==== Signature
 The signature part is a digital SHA1-RSA signature of the body part and is base64 encoded as well. It is created by the issuer of the token. You need the public key of the issuer to verify the integrity of the token body. But there is at least one flaw: *the expire part is not covered by the signature* and could be changed without notice! Thus it _should_ be read from the content of the body, if present.
 
-=== Difference between LTPA Version 1
+== Difference between LTPA Version 1
 Version 1 uses DES-3DES encryption and simple RSA signature without hashing.

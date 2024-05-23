@@ -1,16 +1,20 @@
-== Spring Security LTPA2 Example Usage
+= Usage
 
 This short example shows how to use the LTPA2 Security Module. This example uses Spring Boot.
 
-=== Requirements
+== Requirements
 - Spring Security 6.0+
 - Spring Boot 3.1+
 
-=== Integration
-==== pom.xml
+== Integration
+=== pom.xml
 Add it as an dependency together with you Spring Security dependencies.
+
 [source,xml]
 --
+<project>
+	<!-- ... -->
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -33,14 +37,17 @@ Add it as an dependency together with you Spring Security dependencies.
 			<url>https://mrepo.sephiroth-j.de/</url>
 		</repository>
 	</repositories>
+
+	<!-- ... -->
+</project>
 --
 
-==== Security Configuration for Web Servlet
+=== Security Configuration for Web Servlet
 Add the `Ltpa2Filter` using `Ltpa2Configurer`. It needs a `SecretKey` instance of the shared key that is used for the symmetric encryption and decryption of the LTPA2 token. In order to verify the provided token, it also needs the `PublicKey` from the identity provider (for example IBM Secure Gateway / DataPower) that sends the LTPA2 token.
 
 As the user is pre-authenticated, an instance of `UserDetailsService` is required to setup the security context and populate it with the granted roles for the authenticated user. In this example we will simply use `InMemoryAuthentication` with a hard-coded list of users and their roles.
 
-.Example with In-Memory Authentication
+.**Example with In-Memory Authentication**
 [source,java]
 --
 @Configuration
@@ -77,7 +84,7 @@ public class WebSecurityConfig
 }
 --
 
-.Example with LDAP
+.**Example with LDAP**
 [source,java]
 --
 @Configuration
@@ -115,12 +122,12 @@ public class WebSecurityConfig
 }
 --
 
-==== Security Configuration for Web Reactive
+=== Security Configuration for Web Reactive
 Add an `AuthenticationWebFilter` using `Ltpa2AuthManager` and the `Ltpa2AuthConverter`. The `Ltpa2AuthConverter` needs a `SecretKey` instance of the shared key that is used for the symmetric encryption of the LTPA2 token. In order to verify the provided token, it also needs the `PublicKey` from the identity provider (for example IBM Secure Gateway / DataPower) that sends the LTPA2 token.
 
 As the user is pre-authenticated, an instance of `ReactiveUserDetailsService` is required to setup the security context and populate it with the granted roles for the authenticated user. In this example we will simply use `MapReactiveUserDetailsService` with a hard-coded list of users and their roles.
 
-.Example with In-Memory Authentication
+.**Example with In-Memory Authentication**
 [source,java]
 --
 @Configuration
@@ -167,10 +174,10 @@ public class WebSecurityConfig
 }
 --
 
-=== Where to put the token in a HTTP-Request
+== Where to put the token in a HTTP-Request
 Tokens are either taken from an HTTP header (default `Authorization` with prefix `LtpaToken2`) or a cookie (default `LtpaToken2`). Both names can be configured as needed, as well as the value prefix.
 
-**Examples**
+.**Examples**
 [source,bash]
 --
 # default header and value prefix

@@ -204,8 +204,8 @@
 				<dependencies>
 					<dependency>
 						<groupId>org.asciidoctor</groupId>
-						<artifactId>asciidoctor-maven-plugin</artifactId>
-						<version>2.2.6</version>
+						<artifactId>asciidoctor-converter-doxia-module</artifactId>
+						<version>3.0.0</version>
 					</dependency>
 				</dependencies>
 			</plugin>
