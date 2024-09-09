@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project>
+<site xmlns="http://maven.apache.org/SITE/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SITE/2.0.0 https://maven.apache.org/xsd/site-2.0.0.xsd">
 	<skin>
 		<groupId>org.apache.maven.skins</groupId>
 		<artifactId>maven-fluido-skin</artifactId>
-		<version>1.12.0</version>
+		<version>2.0.0-M10</version>
 	</skin>
-	<bannerLeft>
-		<name>${project.name}</name>
-	</bannerLeft>
+	<bannerLeft name="${project.name}"></bannerLeft>
 	<body>
 		<head><![CDATA[
 			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" integrity="sha512-hasIneQUHlh06VNBe7f6ZcHmeRTLIaQWFd43YriJ0UND19bvYRauxthDg8E4eVNPm9bRUhr5JGeqH7FRFXQu5g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -26,4 +25,4 @@
 		</menu>
 		<menu ref="reports" />
 	</body>
-</project>
+</site>
