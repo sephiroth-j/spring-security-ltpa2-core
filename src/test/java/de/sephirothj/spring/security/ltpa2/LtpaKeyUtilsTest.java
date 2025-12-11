@@ -70,7 +70,7 @@ class LtpaKeyUtilsTest
 	}
 
 	@Test
-	void decryptPrivateKeyTestWithError() throws GeneralSecurityException
+	void decryptPrivateKeyTestWithError()
 	{
 		assertThatThrownBy(() ->
 		{

@@ -7,7 +7,7 @@
 	<name>Spring Security LTPA2</name>
 	<description>Support user pre-authentication using IBM Lightweight Third Party Authentication (LTPA) v2. LTPA2 tokens can be created as well.</description>
 	<url>https://www.sephiroth-j.de/java/spring-security-ltpa2/</url>
-	<version>2.0.2-SNAPSHOT</version>
+	<version>3.0.0-SNAPSHOT</version>
 	<inceptionYear>2018</inceptionYear>
 	<issueManagement>
 		<system>GitHub Issues</system>
@@ -30,17 +30,15 @@
 		<java.version>${project.java.version}</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.source>${project.java.version}</maven.compiler.source>
-		<maven.compiler.target>${project.java.version}</maven.compiler.target>
 		<maven.compiler.release>${project.java.version}</maven.compiler.release>
 		<maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
-		<lombok.version>[1.18.24,1.99.99)</lombok.version>
-		<spring.security.version>[6.0.0,6.99.99)</spring.security.version>
+		<lombok.version>[1.18.42,1.18.99)</lombok.version>
+		<spring.security.version>[7.0.0,7.99.99)</spring.security.version>
 		<junit.jupiter.version>[5.9.0,5.99.99)</junit.jupiter.version>
-		<reactor.version>[3.2.0.RELEASE,3.99.99)</reactor.version>
-		<jacoco.version>0.8.13</jacoco.version>
+		<reactor.version>[3.8.0.RELEASE,3.99.99)</reactor.version>
+		<jacoco.version>0.8.14</jacoco.version>
 		<wagon.version>3.5.3</wagon.version>
-		<javadoc.version>3.11.2</javadoc.version>
+		<javadoc.version>3.12.0</javadoc.version>
 		<byte-buddy.version>[1.14.0,1.99.99)</byte-buddy.version>
 	</properties>
 	
@@ -75,7 +73,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>3.3.1</version>
+						<version>3.4.0</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -88,7 +86,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>3.2.7</version>
+						<version>3.2.8</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -102,6 +100,25 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<id>annotation-processors</id>
+			<activation>
+				<jdk>[21,)</jdk>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+							<compilerArgs>
+								<arg>-proc:full</arg>
+							</compilerArgs>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 	
 	<build>
@@ -110,7 +127,7 @@
 				<plugin>
 					<groupId>org.sonarsource.scanner.maven</groupId>
 					<artifactId>sonar-maven-plugin</artifactId>
-					<version>5.0.0.4389</version>
+					<version>5.5.0.6356</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -118,7 +135,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.14.0</version>
+				<version>3.14.1</version>
 				<configuration>
 					<showDeprecation>true</showDeprecation>
 				</configuration>
@@ -126,7 +143,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.5.3</version>
+				<version>3.5.4</version>
 				<configuration>
 					<trimStackTrace>false</trimStackTrace>
 				</configuration>
@@ -134,7 +151,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.4.2</version>
+				<version>3.5.0</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -169,7 +186,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
-				<version>3.4.1</version>
+				<version>3.5.0</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -179,7 +196,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>3.1.1</version>
+				<version>3.3.0</version>
 				<configuration>
 					<pushChanges>false</pushChanges>
 					<localCheckout>true</localCheckout>
@@ -190,7 +207,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.8.1</version>
+				<version>3.9.0</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -294,6 +311,22 @@
 		</plugins>
 	</reporting>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>net.bytebuddy</groupId>
+				<artifactId>byte-buddy</artifactId>
+				<version>${byte-buddy.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>net.bytebuddy</groupId>
+				<artifactId>byte-buddy-agent</artifactId>
+				<version>${byte-buddy.version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -319,7 +352,7 @@
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
-			<version>[5.0.0,)</version>
+			<version>[6.1.0,6.1.99),[6.2.0,6.2.99)</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -334,12 +367,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
-			<version>3.0.2</version>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<version>${spring.security.version}</version>
@@ -348,7 +375,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>[6.0.0,6.99.99)</version>
+			<version>[7.0.0,7.99.99)</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -366,7 +393,7 @@
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
-			<version>[3.24.0,3.99.99)</version>
+			<version>[3.27.0,3.99.99)</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -378,19 +405,7 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>[5.5.0,5.99.99)</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.bytebuddy</groupId>
-			<artifactId>byte-buddy</artifactId>
-			<version>${byte-buddy.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.bytebuddy</groupId>
-			<artifactId>byte-buddy-agent</artifactId>
-			<version>${byte-buddy.version}</version>
+			<version>[5.20.0,5.99.99)</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
