@@ -116,7 +116,7 @@ class Ltpa2UtilsTest
 	}
 
 	@Test
-	void isSignatureValidTestWithMalformedToken() throws GeneralSecurityException
+	void isSignatureValidTestWithMalformedToken()
 	{
 		assertThatThrownBy(() ->
 		{

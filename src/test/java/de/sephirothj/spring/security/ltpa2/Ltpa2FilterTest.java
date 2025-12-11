@@ -101,7 +101,7 @@ class Ltpa2FilterTest
 	}
 
 	@Test
-	void getTokenFromCookiesTestWithDefaultCookiename() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	void getTokenFromCookiesTestWithDefaultCookiename()
 	{
 		Ltpa2Filter uut = new Ltpa2Filter();
 		String expected = "the-token";
@@ -121,7 +121,7 @@ class Ltpa2FilterTest
 	}
 
 	@Test
-	void getTokenFromCookiesTestWithCustomCookiename() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	void getTokenFromCookiesTestWithCustomCookiename()
 	{
 		Ltpa2Filter uut = new Ltpa2Filter();
 		String name = "my-cookie";
