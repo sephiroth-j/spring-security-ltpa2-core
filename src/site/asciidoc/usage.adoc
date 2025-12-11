@@ -3,8 +3,8 @@
 This short example shows how to use the LTPA2 Security Module. This example uses Spring Boot.
 
 == Requirements
-- Spring Security 6.0+
-- Spring Boot 3.1+
+- Spring Security 7.0+
+- Spring Boot 4.0+
 
 == Integration
 === pom.xml
@@ -27,7 +27,7 @@ Add it as an dependency together with you Spring Security dependencies.
 		<dependency>
 			<groupId>de.sephiroth-j</groupId>
 			<artifactId>spring-security-ltpa2</artifactId>
-			<version>[2.0.0,)</version>
+			<version>[3.0.0,)</version>
 		</dependency>
 	</dependencies>
 

@@ -21,8 +21,8 @@ import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 import lombok.Getter;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.Assert;
 
 /**

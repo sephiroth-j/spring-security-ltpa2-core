@@ -20,10 +20,10 @@ import java.util.Optional;
 import javax.crypto.SecretKey;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -125,7 +125,7 @@ public class Ltpa2Configurer extends AbstractHttpConfigurer<Ltpa2Configurer, Htt
 	private AuthenticationFailureHandler authFailureHandler;
 
 	@Override
-	public void configure(HttpSecurity builder) throws Exception
+	public void configure(HttpSecurity builder)
 	{
 		UserDetailsService userDetailsService = Optional.ofNullable(builder.getSharedObject(ApplicationContext.class))
 			.map(ctx -> ctx.getBean(UserDetailsService.class))

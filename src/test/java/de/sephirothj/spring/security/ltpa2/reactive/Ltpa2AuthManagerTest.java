@@ -50,7 +50,7 @@ class Ltpa2AuthManagerTest
 	}
 
 	@Test
-	void authenticateTest() throws GeneralSecurityException, Exception
+	void authenticateTest() throws GeneralSecurityException
 	{
 		ReactiveUserDetailsService userDetailsService = Mockito.mock(ReactiveUserDetailsService.class);
 		final UserDetails mockUser = User.withUsername("test").password("password").roles("tester").build();
@@ -69,7 +69,7 @@ class Ltpa2AuthManagerTest
 	}
 
 	@Test
-	void authenticateTestWithUserChecker() throws GeneralSecurityException, Exception
+	void authenticateTestWithUserChecker() throws GeneralSecurityException
 	{
 		ReactiveUserDetailsService userDetailsService = Mockito.mock(ReactiveUserDetailsService.class);
 		final UserDetails mockUser = User.withUsername("test").password("password").roles("tester").build();
@@ -88,7 +88,7 @@ class Ltpa2AuthManagerTest
 	}
 
 	@Test
-	void authenticateTestWithUserCheckerAndLockedAccout() throws GeneralSecurityException, Exception
+	void authenticateTestWithUserCheckerAndLockedAccout() throws GeneralSecurityException
 	{
 		ReactiveUserDetailsService userDetailsService = Mockito.mock(ReactiveUserDetailsService.class);
 		final UserDetails mockUser = User.withUsername("test").password("password").roles("tester").accountLocked(true).build();
@@ -101,7 +101,7 @@ class Ltpa2AuthManagerTest
 	}
 
 	@Test
-	void authenticateWithUnknownUserTest() throws GeneralSecurityException, Exception
+	void authenticateWithUnknownUserTest() throws GeneralSecurityException
 	{
 		ReactiveUserDetailsService userDetailsService = Mockito.mock(ReactiveUserDetailsService.class);
 		given(userDetailsService.findByUsername(anyString())).willReturn(Mono.empty());
@@ -116,7 +116,7 @@ class Ltpa2AuthManagerTest
 	}
 
 	@Test
-	void authenticateWithUnsupportedAuthTest() throws GeneralSecurityException, Exception
+	void authenticateWithUnsupportedAuthTest()
 	{
 		ReactiveUserDetailsService userDetailsService = Mockito.mock(ReactiveUserDetailsService.class);
 		given(userDetailsService.findByUsername(anyString())).willReturn(Mono.empty());
