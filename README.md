@@ -24,7 +24,8 @@ An absolute minimum requirement for configuration are the shared secret key need
 ## Version Compatibility Matrix
 Spring Security LTPA2 | Spring Security | Java
 --------------------- | --------------- | ----
-2.0.x (current) | 6.x | 17+
+3.0.x (current) | 7.x | 17+
+2.0.x | 6.x | 17+
 1.1.x | 5.x | 8+
 
 ## Usage
