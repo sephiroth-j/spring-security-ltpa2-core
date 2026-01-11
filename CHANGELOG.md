@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 ### ⚠ Breaking
+### ⭐ New Features
+### 🐞 Bugs Fixed
+
+## [v3.0.0] - 2026-01-11
+### ⚠ Breaking
 - requires Spring Security 7.0+
 - requires Jakarta Servlet™ 6.1 / Jakarta EE 11+
 
