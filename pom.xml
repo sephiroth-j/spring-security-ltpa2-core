@@ -7,7 +7,7 @@
 	<name>Spring Security LTPA2</name>
 	<description>Support user pre-authentication using IBM Lightweight Third Party Authentication (LTPA) v2. LTPA2 tokens can be created as well.</description>
 	<url>https://www.sephiroth-j.de/java/spring-security-ltpa2/</url>
-	<version>3.0.0</version>
+	<version>3.0.1-SNAPSHOT</version>
 	<inceptionYear>2018</inceptionYear>
 	<issueManagement>
 		<system>GitHub Issues</system>
@@ -480,7 +480,7 @@
 		<url>https://github.com/sephiroth-j/spring-security-ltpa2-core</url>
 		<connection>scm:git:git://github.com:sephiroth-j/spring-security-ltpa2-core.git</connection>
 		<developerConnection>scm:git:git@github.com:sephiroth-j/spring-security-ltpa2-core.git</developerConnection>
-		<tag>v3.0.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 	
 	<distributionManagement>
