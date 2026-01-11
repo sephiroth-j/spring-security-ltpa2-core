@@ -1,6 +1,6 @@
 # Spring Security LTPA2 - Changelog
 
-## Unreleased
+## [Unreleased]
 ### ⚠ Breaking
 - requires Spring Security 7.0+
 - requires Jakarta Servlet™ 6.1 / Jakarta EE 11+

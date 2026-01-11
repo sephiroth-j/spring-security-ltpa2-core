@@ -119,6 +119,70 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<id>update-changelog</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>update-changelog</id>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<tstamp prefix="build">
+											<format property="date" pattern="yyyy-MM-dd" />
+										</tstamp>
+										<echo level="info" message="Update CHANGELOG with version: v${project.version} - ${build.date}" />
+										<replace file="CHANGELOG.md" encoding="${project.build.sourceEncoding}" summary="true">
+											<replacetoken>## [Unreleased]</replacetoken>
+											<replacevalue><![CDATA[## [Unreleased]
+### ⚠ Breaking
+### ⭐ New Features
+### 🐞 Bugs Fixed
+
+## [v${project.version}] - @build.date@]]></replacevalue>
+										</replace>
+										<!-- extra step is required because ${build.date} is not evaluated in previous replacevalue-element -->
+										<replace file="CHANGELOG.md" encoding="${project.build.sourceEncoding}" token="@build.date@" value="${build.date}" summary="true" />
+										<!-- fail if changelog entry is missing -->
+										<fail message="changelog entry '## [v${project.version}] - ${build.date}' not found!">
+											<condition>
+												<not>
+													<resourcecontains resource="CHANGELOG.md" substring="## [v${project.version}] - ${build.date}" />
+												</not>
+											</condition>
+										</fail>
+									</target>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-scm-plugin</artifactId>
+						<version>2.2.1</version>
+						<executions>
+							<execution>
+								<id>checkin-changelog</id>
+								<goals>
+									<goal>checkin</goal>
+								</goals>
+								<configuration>
+									<message>[maven-scm-plugin] updating CHANGELOG.md</message>
+									<includes>CHANGELOG.md</includes>
+									<pushChanges>false</pushChanges>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 	
 	<build>
@@ -202,6 +266,8 @@
 					<localCheckout>true</localCheckout>
 					<tagNameFormat>v@{project.version}</tagNameFormat>
 					<releaseProfiles>release</releaseProfiles>
+					<preparationProfiles>update-changelog</preparationProfiles>
+					<preparationGoals>clean antrun:run@update-changelog scm:checkin@checkin-changelog verify</preparationGoals>
 				</configuration>
 			</plugin>
 			<plugin>
